@@ -9,10 +9,11 @@ const SliderPage = () => {
     const [temperature, setTemperature] = React.useState(15);
     const [pressure, setPressure] = React.useState(1013);
     const [altitude, setAltitude] = React.useState(velitherm.altitudeFromStandardPressure(pressure));
-    const [specificHumidity, setSpecificHumidity] = React.useState(0);
+    const [specificHumidity, setSpecificHumidity] = React.useState(1);
     const [mixingRatio, setMixingRatio] = React.useState(velitherm.mixingRatio(specificHumidity));
     const [relativeHumidity, setRelativeHumidity] = React.useState(velitherm.relativeHumidity(specificHumidity, pressure, temperature));
     const [dewPoint, setDewPoint] = React.useState(velitherm.dewPoint(relativeHumidity, temperature));
+    const [lr, setLR] = React.useState<'malr' | 'dalr' | undefined>(undefined);
 
     const fromSpecificHumidity = (v, p?: number, t?: number) => {
         setSpecificHumidity(v);
@@ -52,9 +53,14 @@ const SliderPage = () => {
     }
 
     const fromAltitude = (v) => {
+        let t = temperature;
+        console.log(t, altitude, v, lr);
+        if (lr === 'malr') t += (altitude - v) * velitherm.gammaMoist(t, pressure);
+        if (lr === 'dalr') t += (altitude - v) * velitherm.gamma;
+        if (t != temperature) setTemperature(t);
         setAltitude(v);
         setPressure(velitherm.pressureFromStandardAltitude(v));
-        fromSpecificHumidity(specificHumidity, v);
+        fromSpecificHumidity(specificHumidity, v, t);
     }
 
     const waterHeight = relativeHumidity / 100 * 40;
@@ -70,6 +76,23 @@ const SliderPage = () => {
                 <Slider title='Temperature' units='°C' value={temperature} min={-20} max={40} scale={1} step={1} onChange={(v) => fromTemperature(v)} />
                 <Slider title='Pressure' units='hPa' value={pressure} min={250} max={1050} scale={0} step={25} onChange={(v) => fromPressure(v)} />
                 <Slider title='Altitude' units='m' value={altitude} min={0} max={10500} scale={0} step={50} onChange={(v) => fromAltitude(v)} />
+                <div className='d-flex flex-column m-4'>
+                    <div>Automatic adiabatic adjustment</div>
+                    <div className='d-flex flex-row'>
+                        <label className='label2' htmlFor='dalr m-1'>Dry Adiabatic Lapse Rate: {velitherm.gamma * 100}°C/100m</label>
+                        <input className='m-1' id='dalr' type='checkbox' checked={lr === 'dalr'} onChange={((ev) => {
+                            if (ev.target.checked) setLR('dalr');
+                            else setLR(undefined)
+                        })} />
+                    </div>
+                    <div className='d-flex flex-row'>
+                        <label className='label2' htmlFor='malr'>Moist Adiabatic Lapse Rate: {(velitherm.gammaMoist(temperature, pressure) * 100).toFixed(3)}°C/100m</label>
+                        <input className='m-1' id='malr' type='checkbox' checked={lr === 'malr'} onChange={((ev) => {
+                            if (ev.target.checked) setLR('malr');
+                            else setLR(undefined)
+                        })} />
+                    </div>
+                </div>
             </div>
             <div className='water-container d-flex align-items-center'>
                 {
