@@ -1,21 +1,6 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
+.header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,15 +9,27 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.slider {
+  width: 25vw;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.label {
+  width: 15vw;
+}
+
+.water-bottle {
+  display: block;
+  margin: 0 auto;
+}
+
+.water-container {
+  height: 80vh;
+}
+
+.cloud {
+  position: absolute;
+  top: 12vh;
+  left: 50vw;
+  width: 50vw;
+  height: 25vh;
 }
