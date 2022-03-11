@@ -48,8 +48,8 @@ const SliderPage = () => {
 
     const fromPressure = (v) => {
         setPressure(v);
-        setAltitude(velitherm.altitudeFromStandardPressure(v));
-        fromSpecificHumidity(specificHumidity, v);
+        const h = velitherm.altitudeFromStandardPressure(v)
+        fromAltitude(h);
     }
 
     const fromAltitude = (v) => {
