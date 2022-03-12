@@ -36,8 +36,11 @@ const Slider = (props: SliderProps) => {
                 <Plus className='button-icon' />
             </button>
             <p className='units m-2'>
-                {isNaN(valueText) ? valueText : valueText.toFixed(props.scale)}
-                {props.units}</p>
+                <strong>
+                    {isNaN(valueText) ? valueText : valueText.toFixed(props.scale)}
+                    {props.units}
+                </strong>
+            </p>
         </div>
 
     );
