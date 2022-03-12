@@ -13,7 +13,7 @@ const SliderPage = () => {
     const [mixingRatio, setMixingRatio] = React.useState(velitherm.mixingRatio(specificHumidity));
     const [relativeHumidity, setRelativeHumidity] = React.useState(velitherm.relativeHumidity(specificHumidity, pressure, temperature));
     const [dewPoint, setDewPoint] = React.useState(velitherm.dewPoint(relativeHumidity, temperature));
-    const [lr, setLR] = React.useState<'malr' | 'dalr' | undefined>(undefined);
+    const [lr, setLR] = React.useState<'malr' | 'dalr' | 'auto' | undefined>(undefined);
 
     const fromSpecificHumidity = (v, p?: number, t?: number) => {
         setSpecificHumidity(v);
@@ -53,8 +53,18 @@ const SliderPage = () => {
 
     const fromAltitude = (v) => {
         let t = temperature;
-        if (lr === 'malr') t += (altitude - v) * velitherm.gammaMoist(t, pressure);
-        if (lr === 'dalr') t += (altitude - v) * velitherm.gamma;
+        // integrate over the altitude at 25m increments
+        const d = v < altitude ? -25 : +25;
+        for (let a = altitude; (d < 0 && a > v) || (d > 0 && a < v); a += d) {
+            const p = velitherm.pressureFromStandardAltitude(a);
+            const rh = velitherm.relativeHumidity(specificHumidity, p, t);
+            if (lr === 'malr' || (lr === 'auto' && rh >= 100)) {
+                t -= d * velitherm.gammaMoist(t, p);
+            }
+            if (lr === 'dalr' || (lr === 'auto' && rh < 100)) {
+                t -= d * velitherm.gamma;
+            }
+        }
         if (t != temperature) setTemperature(t);
         setAltitude(v);
         const p = velitherm.pressureFromStandardAltitude(v)
@@ -88,6 +98,13 @@ const SliderPage = () => {
                         <label className='label2' htmlFor='malr'>Moist Adiabatic Lapse Rate: {(velitherm.gammaMoist(temperature, pressure) * 100).toFixed(3)}°C/100m</label>
                         <input className='m-1' id='malr' type='checkbox' checked={lr === 'malr'} onChange={((ev) => {
                             if (ev.target.checked) setLR('malr');
+                            else setLR(undefined)
+                        })} />
+                    </div>
+                    <div className='d-flex flex-row'>
+                        <label className='label2' htmlFor='auto'>Switch automatically</label>
+                        <input className='m-1' id='auto' type='checkbox' checked={lr === 'auto'} onChange={((ev) => {
+                            if (ev.target.checked) setLR('auto');
                             else setLR(undefined)
                         })} />
                     </div>
