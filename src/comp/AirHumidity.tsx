@@ -75,6 +75,9 @@ const SliderPage = () => {
         fromSpecificHumidity(specificHumidity, p, t);
     };
 
+    const boilingPoint = (1/(1/100 -
+        velitherm.R * Math.log(pressure / velitherm.P0) / 2500)).toFixed(2);
+
     const waterHeight = relativeHumidity / 100 * 40;
     const bottleFactor = Math.min(velitherm.specificHumidity(100, pressure, temperature), 100);
     const bottleHeight = (50 * bottleFactor / 100) + 'vh';
@@ -137,6 +140,14 @@ const SliderPage = () => {
                             else setLR(undefined);
                         })} />
                     </div>
+                </div>
+                <div className='d-flex flex-column m-4'>
+                    <span>
+                        Boiling point of water:
+                        <strong className='ms-3'>
+                            {boilingPoint}°C
+                        </strong>
+                    </span>
                 </div>
                 <label className='label m-4' htmlFor='maxAlt'>Maximum altitude</label>
                 <input id='maxAlt' type='number' value={maxAlt} onChange={(ev) => setMaxAlt(+ev.target.value)} />
