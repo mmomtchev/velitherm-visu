@@ -85,6 +85,7 @@ const SliderPage = () => {
 
     const boilingPoint = (1 / (1 / 100 -
         velitherm.R * Math.log(pressure / velitherm.P0) / 2500)).toFixed(2);
+    const density = velitherm.airDensity(relativeHumidity, pressure, temperature).toFixed(3);
 
     const waterHeight = relativeHumidity / 100 * 40;
     const bottleFactor = Math.min(velitherm.specificHumidity(100, pressure, temperature), 100);
@@ -125,6 +126,14 @@ const SliderPage = () => {
                         value={lr} onChange={setLR} />
                     <Checkbox<LRType> title='Average Atmospheric Lapse Rate' id='avg'
                         info={6.5e-3} value={lr} onChange={setLR} />
+                </div>
+                <div className='d-flex flex-column m-4'>
+                    <span>
+                        Air density:
+                        <strong className='ms-3'>
+                            {density}kg/m&sup3;
+                        </strong>
+                    </span>
                 </div>
                 <div className='d-flex flex-column m-4'>
                     <span>
