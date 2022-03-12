@@ -42,3 +42,13 @@
   width: 1.5rem;
   height: 1.5rem;
 }
+
+.marker-container {
+  position: relative;
+}
+
+.marker {
+  color: red;
+  position: absolute;
+  top: 1.5rem;
+}

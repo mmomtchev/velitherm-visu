@@ -12,6 +12,7 @@ interface SliderProps {
     step: number;
     scale: number;
     displayMax?: number;
+    marker?: number;
     onChange: (v: number) => void;
 }
 
@@ -22,27 +23,44 @@ const Slider = (props: SliderProps) => {
     if (props.displayMax !== undefined && valueText > props.displayMax)
         valueText = props.displayMax;
     const clamp = (v: number) => Math.max(Math.min(v, props.max), props.min);
-    return (
-        <div className='d-flex flex-row m-2'>
-            <label className='label m-2' htmlFor={id}>{props.title}</label>
-            <button className='btn' onClick={() => props.onChange(clamp(valueSlider - props.step))}>
-                <Minus className='button-icon' />
-            </button>
-            <input type='range' className='slider' id={id} value={valueSlider}
-                min={props.min} max={props.max} step={props.step} onChange={(ev) => {
-                props.onChange(+ev.target.value);
-            }} />
-            <button className='btn' onClick={() => props.onChange(clamp(valueSlider + props.step))}>
-                <Plus className='button-icon' />
-            </button>
-            <p className='units m-2'>
-                <strong>
-                    {isNaN(valueText) ? valueText : valueText.toFixed(props.scale)}
-                    {props.units}
-                </strong>
-            </p>
-        </div>
 
+    const slider = React.useRef<HTMLInputElement>();
+    const marker = React.useRef<HTMLDivElement>();
+    React.useLayoutEffect(() => {
+        if (marker.current) {
+            const width = slider.current.clientWidth - 18;
+            const offset = (props.marker - props.min) / (props.max - props.min) * width;
+            marker.current.style.left = Math.max(Math.min(offset, width), 0) + 'px';
+        }
+    });
+
+    return (
+        <React.Fragment>
+            <div className='d-flex flex-row m-2'>
+                <label className='label m-2' htmlFor={id}>{props.title}</label>
+                <button className='btn' onClick={() => props.onChange(clamp(valueSlider - props.step))}>
+                    <Minus className='button-icon' />
+                </button>
+                <div className='marker-container'>
+                    {props.marker !== undefined ?
+                        <div className='marker' style={{ left: '0' }} ref={marker}>&#9650;</div> :
+                        null}
+                </div>
+                <input type='range' className='slider' id={id} value={valueSlider} ref={slider}
+                    min={props.min} max={props.max} step={props.step} onChange={(ev) => {
+                        props.onChange(+ev.target.value);
+                    }} />
+                <button className='btn' onClick={() => props.onChange(clamp(valueSlider + props.step))}>
+                    <Plus className='button-icon' />
+                </button>
+                <p className='units m-2'>
+                    <strong>
+                        {isNaN(valueText) ? valueText : valueText.toFixed(props.scale)}
+                        {props.units}
+                    </strong>
+                </p>
+            </div>
+        </React.Fragment>
     );
 };
 

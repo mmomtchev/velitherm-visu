@@ -19,6 +19,16 @@ const SliderPage = () => {
     const [dewPoint, setDewPoint] = React.useState(velitherm.dewPoint(relativeHumidity, temperature));
     const [lr, setLR] = React.useState<LRType>(undefined);
     const [maxAlt, setMaxAlt] = React.useState(6000);
+    const [markers, setMarkers] = React.useState({
+        temperature: undefined,
+        pressure: undefined,
+        altitude: undefined,
+        specificHumidity: undefined,
+        mixingRatio: undefined,
+        relativeHumidity: undefined,
+        dewPoint: undefined,
+        density: undefined
+    });
 
     const fromSpecificHumidity = (v, p?: number, t?: number) => {
         setSpecificHumidity(v);
@@ -84,8 +94,8 @@ const SliderPage = () => {
     };
 
     const boilingPoint = (1 / (1 / 100 -
-        velitherm.R * Math.log(pressure / velitherm.P0) / 2500)).toFixed(2);
-    const density = velitherm.airDensity(relativeHumidity, pressure, temperature).toFixed(3);
+        velitherm.R * Math.log(pressure / velitherm.P0) / 2500));
+    const density = velitherm.airDensity(relativeHumidity, pressure, temperature);
 
     const waterHeight = relativeHumidity / 100 * 40;
     const bottleFactor = Math.min(velitherm.specificHumidity(100, pressure, temperature), 100);
@@ -96,25 +106,25 @@ const SliderPage = () => {
         <div className='d-flex flex-row'>
             <div>
                 <Slider title='Specific Humidity' units='g/kg' value={specificHumidity}
-                    min={0} scale={2} max={50} step={0.25}
+                    min={0} scale={2} max={50} step={0.25} marker={markers.specificHumidity}
                     onChange={(v) => fromSpecificHumidity(v)} />
                 <Slider title='Mixing Ratio' units='g/kg' value={mixingRatio}
-                    min={0} max={50} scale={2} step={0.25}
+                    min={0} max={50} scale={2} step={0.25} marker={markers.mixingRatio}
                     onChange={(v) => fromMixingRatio(v)} />
                 <Slider title='Relative Humidity' units='%' value={relativeHumidity}
-                    min={0} max={100} displayMax={100} scale={0} step={1}
+                    min={0} max={100} displayMax={100} scale={0} step={1} marker={markers.relativeHumidity}
                     onChange={(v) => fromRelativeHumidity(v)} />
-                <Slider title='Dew Point' units='°C' value={dewPoint}
+                <Slider title='Dew Point' units='°C' value={dewPoint} marker={markers.dewPoint}
                     min={-50} max={50} displayMax={temperature} scale={1} step={0.5}
                     onChange={(v) => fromDewPoint(v)} />
-                <Slider title='Temperature' units='°C' value={temperature}
+                <Slider title='Temperature' units='°C' value={temperature} marker={markers.temperature}
                     min={-20} max={40} scale={1} step={0.5}
                     onChange={(v) => fromTemperature(v)} />
-                <Slider title='Pressure' units='hPa' value={pressure}
+                <Slider title='Pressure' units='hPa' value={pressure} marker={markers.pressure}
                     min={velitherm.pressureFromStandardAltitude(maxAlt)} max={velitherm.P0} scale={0} step={5}
                     onChange={(v) => fromPressure(v)} />
                 <Slider title='Altitude' units='m' value={altitude}
-                    min={0} max={maxAlt} scale={0} step={10}
+                    min={0} max={maxAlt} scale={0} step={10} marker={markers.altitude}
                     onChange={(v) => fromAltitude(v)} />
                 <div className='d-flex flex-column m-4'>
                     <div>Pressure/Temperature Adiabatic Coupling</div>
@@ -131,7 +141,7 @@ const SliderPage = () => {
                     <span>
                         Air density:
                         <strong className='ms-3'>
-                            {density}kg/m&sup3;
+                            {density.toFixed(3)}kg/m&sup3;
                         </strong>
                     </span>
                 </div>
@@ -139,12 +149,43 @@ const SliderPage = () => {
                     <span>
                         Boiling point of water:
                         <strong className='ms-3'>
-                            {boilingPoint}°C
+                            {boilingPoint.toFixed(2)}°C
                         </strong>
                     </span>
                 </div>
                 <label className='label m-4' htmlFor='maxAlt'>Maximum altitude</label>
                 <input id='maxAlt' type='number' value={maxAlt} onChange={(ev) => setMaxAlt(+ev.target.value)} />
+                <div className='d-flex flex-row m-4'>
+                    <div className='me-4'>
+                    <button className='btn btn-danger' onClick={() => {
+                        setMarkers({
+                            specificHumidity,
+                            mixingRatio,
+                            relativeHumidity,
+                            dewPoint,
+                            temperature,
+                            pressure,
+                            altitude,
+                            density
+                        });
+                    }}>Memory</button>
+                    </div>
+                    {
+                        markers.specificHumidity !== undefined ?
+                            <div className='m-2 p-2 bg-light'>
+                                <table className='label2'><tbody>
+                                    <tr><td>Specific Humidity</td><td className='fw-bold'>{markers.specificHumidity.toFixed(2)}g/kg</td></tr>
+                                    <tr><td>Mixing Ratio</td><td className='fw-bold'>{markers.mixingRatio.toFixed(2)}g/kg</td></tr>
+                                    <tr><td>Relative Humidity</td><td className='fw-bold'>{markers.relativeHumidity.toFixed(0)}%</td></tr>
+                                    <tr><td>Temperature</td><td className='fw-bold'>{markers.temperature.toFixed(1)}°C</td></tr>
+                                    <tr><td>Pressure</td><td className='fw-bold'>{markers.pressure.toFixed(0)}hPa</td></tr>
+                                    <tr><td>Altitude</td><td className='fw-bold'>{markers.altitude.toFixed(0)}m</td></tr>
+                                    <tr><td>Density</td><td className='fw-bold'>{markers.density.toFixed(3)}kg/m&sup3;</td></tr>
+                                </tbody></table>
+                            </div>
+                            : null
+                    }
+                </div>
             </div>
             <div className='water-container w-100 d-flex align-items-center'>
                 {
@@ -164,7 +205,7 @@ const SliderPage = () => {
                     <path className='water' mask='url(#water-mask)' d='M4.5 46.5v-23l4-14h4l4 14v23' fill='blue' />
                 </svg>
             </div>
-        </div>
+        </div >
     );
 };
 
