@@ -47,20 +47,19 @@ const SliderPage = () => {
     };
 
     const fromPressure = (v) => {
-        setPressure(v);
         const h = velitherm.altitudeFromStandardPressure(v)
         fromAltitude(h);
     }
 
     const fromAltitude = (v) => {
         let t = temperature;
-        console.log(t, altitude, v, lr);
         if (lr === 'malr') t += (altitude - v) * velitherm.gammaMoist(t, pressure);
         if (lr === 'dalr') t += (altitude - v) * velitherm.gamma;
         if (t != temperature) setTemperature(t);
         setAltitude(v);
-        setPressure(velitherm.pressureFromStandardAltitude(v));
-        fromSpecificHumidity(specificHumidity, v, t);
+        const p = velitherm.pressureFromStandardAltitude(v)
+        setPressure(p);
+        fromSpecificHumidity(specificHumidity, p, t);
     }
 
     const waterHeight = relativeHumidity / 100 * 40;
