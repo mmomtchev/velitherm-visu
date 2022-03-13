@@ -17,8 +17,16 @@
   width: 15vw;
 }
 
+.label05 {
+  width: 5vw;
+}
+
 .label2 {
   width: 40vw;
+}
+
+.level-label {
+  width: 25vw;
 }
 
 .water-bottle {
@@ -51,4 +59,8 @@
   color: red;
   position: absolute;
   top: 1.5rem;
+}
+
+.vertical-profile {
+  height: 70vh;
 }

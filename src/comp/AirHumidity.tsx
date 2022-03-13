@@ -8,7 +8,7 @@ import * as velitherm from 'velitherm';
 
 type LRType = 'malr' | 'dalr' | 'auto' | 'avg' | undefined;
 
-const SliderPage = () => {
+const AirHumidity = () => {
     const [temperature, setTemperature] = React.useState(15);
     const [pressure, setPressure] = React.useState(1013);
     const [altitude, setAltitude] = React.useState(velitherm.altitudeFromStandardPressure(pressure));
@@ -209,4 +209,4 @@ const SliderPage = () => {
     );
 };
 
-export default SliderPage;
+export default AirHumidity;
