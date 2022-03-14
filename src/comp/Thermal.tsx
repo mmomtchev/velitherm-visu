@@ -169,7 +169,7 @@ const Thermal = () => {
         {
             altitude: 0,
             temperature: 25,
-            rh: 50
+            rh: 70
         },
         {
             altitude: maxAlt,
