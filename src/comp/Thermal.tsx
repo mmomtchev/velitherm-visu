@@ -10,11 +10,14 @@ const maxAlt = 3000;
 const steps = 50;
 const info = 10;
 
-function tempToColor(tempMin: number, tempMax: number, t: number): [number, number, number] {
+function tempToColor(tempMin: number, tempMax: number, t: number, invert?: boolean): [number, number, number] {
     let red = 1.0, green = 1.0, blue = 1.0;
     const dv = tempMax - tempMin;
 
     t = Math.max(Math.min(t, tempMax), tempMin);
+
+    if (invert)
+        t = tempMax - (t - tempMin);
 
     if (t < (tempMin + 0.25 * dv)) {
         red = 0;
@@ -181,9 +184,6 @@ const Thermal = () => {
     const tempMin = levels.reduce((min, lvl) => lvl.temperature < min ? lvl.temperature : min, Infinity);
     const tempMax = levels.reduce((max, lvl) => lvl.temperature > max ? lvl.temperature : max, -Infinity) + deltaT;
 
-    const toColor = (l: Level) =>
-        colorString(tempToColor(tempMin, tempMax, l.temperature));
-
     const atmoProfile = computeAtmosphericProfile(levels);
 
     const updraftProfile = computeUpdraftProfile(atmoProfile, deltaT);
@@ -202,7 +202,7 @@ const Thermal = () => {
                     (interpolateLevel(i / steps * maxAlt, atmoProfile).temperature))));
             humidProfile.addColorStop(i / steps,
                 colorString(tempToColor(0, 100,
-                    (interpolateLevel(i / steps * maxAlt, atmoProfile).rh))));
+                    (interpolateLevel(i / steps * maxAlt, atmoProfile).rh), true)));
         }
 
         ctx.fillStyle = humidProfile;
@@ -213,11 +213,12 @@ const Thermal = () => {
         const updraftHeight = (updraftProfile[updraftProfile.length - 1].altitude / maxAlt) * height;
         const updraftTempProfile = ctx.createLinearGradient(0, height - 1, 0, height - updraftHeight);
         const updraftHumidProfile = ctx.createLinearGradient(0, height - 1, 0, height - updraftHeight);
-        const updraftDensityProfile = ctx.createLinearGradient(0, height - 1, 0, height - updraftHeight);
         if (updraftProfile.length > 1) {
             for (let i = 0; i < updraftProfile.length; i++) {
-                updraftTempProfile.addColorStop(i / (updraftProfile.length - 1), toColor(updraftProfile[i]));
-                updraftHumidProfile.addColorStop(i / (updraftProfile.length - 1), toColor(updraftProfile[i]));
+                updraftTempProfile.addColorStop(i / (updraftProfile.length - 1),
+                    colorString(tempToColor(tempMin, tempMax, updraftProfile[i].temperature)));
+                updraftHumidProfile.addColorStop(i / (updraftProfile.length - 1),
+                    colorString(tempToColor(0, 100, updraftProfile[i].rh, true)));
             }
             ctx.fillStyle = updraftHumidProfile;
             ctx.fillRect(width / 3 - width / 20, height - updraftHeight, width / 10, updraftHeight);
