@@ -26,7 +26,16 @@
 }
 
 .level-label {
+  width: 24vw;
+}
+
+.level-margin {
   width: 25vw;
+}
+
+.input-number {
+  min-width: 3rem;
+  max-width: 4rem;
 }
 
 .water-bottle {
@@ -62,5 +71,14 @@
 }
 
 .vertical-profile {
-  height: 70vh;
+  height: 80vh;
+}
+
+small {
+  line-height: 1rem !important;
+}
+
+small p {
+    margin: 0;
+    padding: 0;
 }

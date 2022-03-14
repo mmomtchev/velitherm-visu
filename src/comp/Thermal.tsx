@@ -1,5 +1,8 @@
 import React from 'react';
 
+import { ReactComponent as Plus } from '../icons/plus.svg';
+import { ReactComponent as Minus } from '../icons/minus.svg';
+
 import * as velitherm from 'velitherm';
 
 const maxAlt = 3000;
@@ -33,13 +36,13 @@ function colorString(rgb: [number, number, number]): string {
     return '#' + rgb.map(c => Math.round(c * 192).toString(16).padStart(2, '0')).join('');
 }
 
-interface LevelBase {
+interface LevelUI {
     altitude: number;
     temperature: number;
     rh: number;
 }
 
-interface Level extends LevelBase {
+interface Level extends LevelUI {
     q: number;
     density: number;
 }
@@ -107,7 +110,8 @@ function drawInfo(ctx, lvls: Level[], x: number, width: number, height: number):
     }
 }
 
-function computeAtmosphericProfile(lvls: LevelBase[]): Level[] {
+function computeAtmosphericProfile(lvls: LevelUI[]): Level[] {
+    lvls.sort((a, b) => a.altitude - b.altitude);
     const atmoProfile: Level[] = [];
     for (const lvl of lvls) {
         if (lvl.altitude == null || lvl.temperature == null)
@@ -124,7 +128,7 @@ function computeAtmosphericProfile(lvls: LevelBase[]): Level[] {
     return atmoProfile;
 }
 
-function computeupdraftProfileProfile(lvls: Level[], deltaT: number): Level[] {
+function computeUpdraftProfile(lvls: Level[], deltaT: number): Level[] {
     const updraftProfile: Level[] = [{
         altitude: 0,
         temperature: lvls[0].temperature + deltaT,
@@ -157,31 +161,11 @@ function computeupdraftProfileProfile(lvls: Level[], deltaT: number): Level[] {
 
 const Thermal = () => {
     const [deltaT, setDeltaT] = React.useState(0.5);
-    const [levels, setLevels] = React.useState<LevelBase[]>([
+    const [levels, setLevels] = React.useState<LevelUI[]>([
         {
             altitude: 0,
             temperature: 25,
             rh: 50
-        },
-        {
-            altitude: maxAlt / 6,
-            temperature: 18,
-            rh: 40
-        },
-        {
-            altitude: maxAlt / 3,
-            temperature: 15,
-            rh: 30
-        },
-        {
-            altitude: maxAlt / 2,
-            temperature: 11,
-            rh: 20
-        },
-        {
-            altitude: maxAlt * 3 / 4,
-            temperature: 9,
-            rh: 20
         },
         {
             altitude: maxAlt,
@@ -190,18 +174,18 @@ const Thermal = () => {
         }
     ]);
 
+
     const canvas = React.useRef<HTMLCanvasElement>();
 
     const tempMin = levels.reduce((min, lvl) => lvl.temperature < min ? lvl.temperature : min, Infinity);
-    const tempMax = Math.max(levels.reduce((max, lvl) => lvl.temperature > max ? lvl.temperature : max, -Infinity),
-        levels[0].temperature + deltaT);
+    const tempMax = levels.reduce((max, lvl) => lvl.temperature > max ? lvl.temperature : max, -Infinity) + deltaT;
 
     const toColor = (l: Level) =>
         colorString(tempToColor(tempMin, tempMax, l.temperature));
 
     const atmoProfile = computeAtmosphericProfile(levels);
 
-    const updraftProfile = computeupdraftProfileProfile(atmoProfile, deltaT);
+    const updraftProfile = computeUpdraftProfile(atmoProfile, deltaT);
 
     React.useEffect(() => {
         const ctx = canvas.current.getContext('2d');
@@ -210,62 +194,143 @@ const Thermal = () => {
         ctx.font = '18px sans-serif';
 
         const tempProfile = ctx.createLinearGradient(0, height - 1, 0, 0);
-        for (let i = 0; i < steps; i++)
-            tempProfile.addColorStop(i / steps, toColor(interpolateLevel(i / steps * maxAlt, atmoProfile)));
+        const humidProfile = ctx.createLinearGradient(0, height - 1, 0, 0);
+        for (let i = 0; i < steps; i++) {
+            tempProfile.addColorStop(i / steps,
+                colorString(tempToColor(tempMin, tempMax,
+                    (interpolateLevel(i / steps * maxAlt, atmoProfile).temperature))));
+            humidProfile.addColorStop(i / steps,
+                colorString(tempToColor(0, 100,
+                    (interpolateLevel(i / steps * maxAlt, atmoProfile).rh))));
+        }
+
+        ctx.fillStyle = humidProfile;
+        ctx.fillRect(0, 0, width / 2, height);
         ctx.fillStyle = tempProfile;
-        ctx.fillRect(0, 0, width, height);
+        ctx.fillRect(width / 2, 0, width / 2, height);
 
         const updraftHeight = (updraftProfile[updraftProfile.length - 1].altitude / maxAlt) * height;
-        const updraftGradient = ctx.createLinearGradient(0, height - 1, 0, height - updraftHeight);
+        const updraftTempProfile = ctx.createLinearGradient(0, height - 1, 0, height - updraftHeight);
+        const updraftHumidProfile = ctx.createLinearGradient(0, height - 1, 0, height - updraftHeight);
+        const updraftDensityProfile = ctx.createLinearGradient(0, height - 1, 0, height - updraftHeight);
         if (updraftProfile.length > 1) {
             for (let i = 0; i < updraftProfile.length; i++) {
-                updraftGradient.addColorStop(i / (updraftProfile.length - 1), toColor(updraftProfile[i]));
+                updraftTempProfile.addColorStop(i / (updraftProfile.length - 1), toColor(updraftProfile[i]));
+                updraftHumidProfile.addColorStop(i / (updraftProfile.length - 1), toColor(updraftProfile[i]));
             }
-            ctx.fillStyle = updraftGradient;
-            ctx.fillRect(width / 2 - 15, height - updraftHeight, 30, updraftHeight);
+            ctx.fillStyle = updraftHumidProfile;
+            ctx.fillRect(width / 3 - width / 20, height - updraftHeight, width / 10, updraftHeight);
+            ctx.fillStyle = updraftTempProfile;
+            ctx.fillRect(width * 2 / 3 - width / 20, height - updraftHeight, width / 10, updraftHeight);
         }
 
         ctx.fillStyle = 'black';
         ctx.fillRect(0, height - updraftHeight, width, 1);
 
-        drawInfo(ctx, atmoProfile, width / 4, width, height);
-        drawInfo(ctx, updraftProfile, width * 3 / 4, width, height);
+        drawInfo(ctx, atmoProfile, width / 8, width, height);
+        drawInfo(ctx, updraftProfile, width * 7 / 8, width, height);
     });
 
+    React.useLayoutEffect(() => {
+        const list = document.getElementsByClassName('canvas-width') as HTMLCollectionOf<HTMLElement>;
+        for (let i = 0; i < list.length; i++)
+            list.item(i).style.width = canvas.current.offsetWidth + 'px';
+    });
+
+    console.log(levels);
     return (
-        <div className='m-4'>
-            <div style={{ position: 'relative' }} className='d-flex flex-row'>
-                <div className='label2'>
+        <React.Fragment><div className='m-2'>
+            <div className='d-flex flex-row'>
+                <div className='level-margin'>&nbsp;</div>
+                <div>
+                    <div className='canvas-width d-flex flex-row justify-content-around'>
+                        <div>
+                            Humidity
+                        </div>
+                        <div>
+                            Temperature
+                        </div>
+                    </div>
+                    <div className='canvas-width d-flex flex-row justify-content-between'>
+                        <div>
+                            Atmosphere
+                        </div>
+                        <div>
+                            Updraft
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className='position-relative d-flex flex-row'>
+                <div className='level-margin'>
                     {
                         levels.map((lvl, i) => {
                             const y = lvl.altitude / maxAlt;
-                            return (<div className='level-label d-flex flex-row justify-content-between' key={lvl.altitude} style={{ position: 'absolute', top: `calc(70vh * (1 - ${y}) - 1rem)` }}>
-                                <div>
-                                    <input type='number' className='label05' id={`temp-${lvl.altitude}`}
-                                        min={-40}
-                                        max={40}
-                                        value={lvl.temperature.toFixed(0)} onChange={(ev) => {
-                                            lvl.temperature = +ev.target.value;
-                                            setLevels([...levels]);
-                                        }} />
-                                    <label htmlFor={`temp-${lvl.altitude}`}>°C</label>
+                            let plusAlt: number = undefined;
+                            if (i > 0)
+                                plusAlt = (levels[i - 1].altitude + lvl.altitude) / 2;
+                            return (<React.Fragment key={lvl.altitude}>
+                                <div className='level-label d-flex flex-row justify-content-between flex-wrap'
+                                    style={{ position: 'absolute', top: `calc(80vh * (1 - ${y}) - 1rem)` }}>
+                                    <div>
+                                        <input type='number' className='input-number' id={`temp-${lvl.altitude}`}
+                                            min={-40} max={40} maxLength={3}
+                                            value={lvl.temperature.toFixed(0)} onChange={(ev) => {
+                                                lvl.temperature = +ev.target.value;
+                                                setLevels([...levels]);
+                                            }} />
+                                        <label htmlFor={`temp-${lvl.altitude}`}>°C</label>
+                                    </div>
+                                    <div>
+                                        <input type='number' className='input-number' id={`humid-${lvl.altitude}`}
+                                            min={0} max={100} maxLength={3} value={lvl.rh.toFixed(0)}
+                                            onChange={(ev) => {
+                                                lvl.rh = +ev.target.value;
+                                                setLevels([...levels]);
+                                            }} />
+                                        <label htmlFor={`humid-${lvl.altitude}`}>%</label>
+                                    </div>
+                                    <div className='fw-bold'>{lvl.altitude}m</div>
+                                    {i > 0 && i < levels.length - 1 ?
+                                        <button className='btn m-0 p-0' onClick={() => {
+                                            return;
+                                        }}>
+                                            <Minus className='button-icon' onClick={() => {
+                                                const i = levels.findIndex((l) => l.altitude === lvl.altitude);
+                                                levels.splice(i, 1);
+                                                setLevels([...levels]);
+                                            }} />
+                                        </button>
+                                        :
+                                        <span className='button-icon'></span>
+                                    }
                                 </div>
-                                <div>
-                                    <input type='number' className='label05' id={`humid-${lvl.altitude}`}
-                                        min={0} max={100} value={lvl.rh.toFixed(0)} onChange={(ev) => {
-                                            lvl.rh = +ev.target.value;
-                                            setLevels([...levels]);
-                                        }} />
-                                    <label htmlFor={`humid-${lvl.altitude}`}>%</label>
-                                </div>
-                                <div className='fw-bold'>{lvl.altitude}m</div>
-                            </div>);
+                                {i > 0 ?
+                                    <div className='level-label d-flex flex-row justify-content-end'
+                                        style={{ position: 'absolute', top: `calc(80vh * (1 - ${plusAlt / maxAlt}) - 1rem)` }}>
+                                        <button className='btn m-0 p-0' onClick={() => {
+                                            const def = interpolateLevel(plusAlt, atmoProfile);
+                                            setLevels([...levels, {
+                                                altitude: plusAlt,
+                                                rh: def.rh,
+                                                temperature: def.temperature
+                                            }]);
+                                        }}>
+                                            <Plus className='button-icon' />
+                                        </button>
+                                    </div>
+                                    : null
+                                }
+                            </React.Fragment>);
                         })
                     }
                 </div>
                 <canvas className='vertical-profile' ref={canvas} width='400px' height='1200px' />
             </div>
         </div>
+            <div className='my-4'>&nbsp;</div>
+            <div className='my-4'>&nbsp;</div>
+        </React.Fragment>
     );
 };
 
