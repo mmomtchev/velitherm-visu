@@ -38,6 +38,10 @@
   max-width: 4rem;
 }
 
+.canvas-width {
+  width: 26.66vh;
+}
+
 .water-bottle {
   display: block;
   margin: 0 auto;

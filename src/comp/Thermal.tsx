@@ -233,12 +233,6 @@ const Thermal = () => {
         drawInfo(ctx, updraftProfile, width * 7 / 8, width, height);
     });
 
-    React.useLayoutEffect(() => {
-        const list = document.getElementsByClassName('canvas-width') as HTMLCollectionOf<HTMLElement>;
-        for (let i = 0; i < list.length; i++)
-            list.item(i).style.width = canvas.current.offsetWidth + 'px';
-    });
-
     return (
         <React.Fragment><div className='m-2'>
             <div className='d-flex flex-row'>
