@@ -11,6 +11,21 @@ const maxAlt = 3000;
 const steps = 50;
 const info = 10;
 
+// Compute the adiabatic expansion from the pressure ratio
+//
+// Adiabatic expansion is governed by the Ideal gas law
+// P * V = n * R * T
+// where P=pressure, V=volume, n=molar quantity, R=ideal gas constant, T=temperature
+// Additionally adiabatic expansion is an isentropic process (constant entropy), which gives:
+// V = V0 * (P / P0) ^ (-1 / Gamma)
+// Air is mostly a diatomic gas, so Gamma is 1.4
+//
+// (from https://en.wikipedia.org/wiki/Ideal_gas_law)
+
+function adiabaticExpanion(pressure: number, pressure0: number, volume0: number): number {
+    return volume0 * Math.pow(pressure / pressure0, -1 / 1.4);
+}
+
 function tempToColor(tempMin: number, tempMax: number, t: number, invert?: boolean): [number, number, number] {
     let red = 1.0, green = 1.0, blue = 1.0;
     const dv = tempMax - tempMin;
@@ -50,6 +65,7 @@ interface LevelUI {
 interface Level extends LevelUI {
     q: number;
     density: number;
+    volume?: number;
 }
 
 function interpolateLevel(altitude: number, lvls: Level[]): Level {
@@ -59,14 +75,17 @@ function interpolateLevel(altitude: number, lvls: Level[]): Level {
             const temperature = lvls[i].temperature + c * (lvls[i + 1].temperature - lvls[i].temperature);
             const q = lvls[i].q + c * (lvls[i + 1].q - lvls[i].q);
             const p = velitherm.pressureFromStandardAltitude(altitude);
+            const p0 = velitherm.pressureFromStandardAltitude(lvls[i].altitude);
             const rh = velitherm.relativeHumidity(q, p, temperature);
             const density = velitherm.airDensity(rh, p, temperature);
+            const volume = lvls[i].volume !== undefined ? adiabaticExpanion(p, p0, lvls[i].volume) : undefined;
             return {
                 altitude,
                 temperature,
                 q,
                 rh,
-                density
+                density,
+                volume
             };
         }
     }
@@ -88,13 +107,16 @@ function drawInfo(ctx, lvls: Level[], x: number, width: number, height: number):
 
         const lvl = interpolateLevel(altitude, lvls);
 
+        const volume = lvl.volume ?? 1;
+        console.log(volume);
+
         let line = y - 25;
         ctx.beginPath();
         if (lvl.rh < 100)
             ctx.fillStyle = 'white';
         else
             ctx.fillStyle = 'grey';
-        ctx.arc(x - 5, y, width / 8, 0, 2 * Math.PI);
+        ctx.arc(x - 5, y, width / 8 * volume, 0, 2 * Math.PI);
         ctx.fill();
 
         ctx.fillStyle = 'blue';
@@ -139,22 +161,26 @@ function computeUpdraftProfile(lvls: Level[], deltaT: number): Level[] {
         temperature: lvls[0].temperature + deltaT,
         q: lvls[0].q,
         rh: lvls[0].rh,
-        density: velitherm.airDensity(lvls[0].rh, velitherm.P0, lvls[0].temperature)
+        density: velitherm.airDensity(lvls[0].rh, velitherm.P0, lvls[0].temperature),
+        volume: 1
     }];
     for (let i = 1; i < steps; i++) {
         const altitude = i / (steps - 1) * maxAlt;
         const p = velitherm.pressureFromStandardAltitude(altitude);
+        const p0 = velitherm.pressureFromStandardAltitude(updraftProfile[i - 1].altitude);
         const rh = velitherm.relativeHumidity(updraftProfile[i - 1].q, p, updraftProfile[i - 1].temperature);
         const temperature = updraftProfile[i - 1].temperature - (maxAlt / (steps - 1)) *
             (rh < 100 ?
                 velitherm.gamma :
                 velitherm.gammaMoist(updraftProfile[i - 1].temperature, p));
+        const volume = adiabaticExpanion(p, p0, updraftProfile[i - 1].volume);
         const l: Level = {
             altitude,
             temperature,
             q: updraftProfile[i - 1].q,
             rh,
-            density: velitherm.airDensity(rh, p, temperature)
+            density: velitherm.airDensity(rh, p, temperature),
+            volume
         };
         if (l.density > interpolateLevel(altitude, lvls).density)
             break;
