@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Slider from './Slider';
 import { ReactComponent as Plus } from '../icons/plus.svg';
 import { ReactComponent as Minus } from '../icons/minus.svg';
 
@@ -237,11 +238,11 @@ const Thermal = () => {
             list.item(i).style.width = canvas.current.offsetWidth + 'px';
     });
 
-    console.log(levels);
     return (
         <React.Fragment><div className='m-2'>
             <div className='d-flex flex-row'>
-                <div className='level-margin'>&nbsp;</div>
+                <div className='level-margin'>&nbsp;
+                </div>
                 <div>
                     <div className='canvas-width d-flex flex-row justify-content-around'>
                         <div>
@@ -329,7 +330,7 @@ const Thermal = () => {
             </div>
         </div>
             <div className='my-4'>&nbsp;</div>
-            <div className='my-4'>&nbsp;</div>
+            <Slider title='Updraft Intensity ΔT' units='°C' value={deltaT} min={0} max={1} step={0.1} scale={1} onChange={(v) => setDeltaT(v)} />
         </React.Fragment>
     );
 };
