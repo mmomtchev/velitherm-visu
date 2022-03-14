@@ -272,8 +272,8 @@ const Thermal = () => {
                                     style={{ position: 'absolute', top: `calc(80vh * (1 - ${y}) - 1rem)` }}>
                                     <div>
                                         <input type='number' className='input-number' id={`temp-${lvl.altitude}`}
-                                            min={-40} max={40} maxLength={3}
-                                            value={lvl.temperature.toFixed(0)} onChange={(ev) => {
+                                            min={-40} max={40} maxLength={3} step={0.5}
+                                            value={lvl.temperature.toFixed(1)} onChange={(ev) => {
                                                 lvl.temperature = +ev.target.value;
                                                 setLevels([...levels]);
                                             }} />
@@ -281,7 +281,7 @@ const Thermal = () => {
                                     </div>
                                     <div>
                                         <input type='number' className='input-number' id={`humid-${lvl.altitude}`}
-                                            min={0} max={100} maxLength={3} value={lvl.rh.toFixed(0)}
+                                            min={0} max={100} maxLength={3} step={1} value={lvl.rh.toFixed(0)}
                                             onChange={(ev) => {
                                                 lvl.rh = +ev.target.value;
                                                 setLevels([...levels]);
