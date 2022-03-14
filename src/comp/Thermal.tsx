@@ -17,10 +17,11 @@ const info = 10;
 // P * V = n * R * T
 // where P=pressure, V=volume, n=molar quantity, R=ideal gas constant, T=temperature
 // Additionally adiabatic expansion is an isentropic process (constant entropy), which gives:
-// V = V0 * (P / P0) ^ (-1 / Gamma)
+// V = V0 * (P / P0) ^ (-1 / Gamma) where Gamma is the heat capacity ratio
 // Air is mostly a diatomic gas, so Gamma is 1.4
 //
-// (from https://en.wikipedia.org/wiki/Ideal_gas_law)
+// Refer to https://en.wikipedia.org/wiki/Ideal_gas_law
+// (this is not true during condensation)
 
 function adiabaticExpanion(pressure: number, pressure0: number, volume0: number): number {
     return volume0 * Math.pow(pressure / pressure0, -1 / 1.4);
@@ -108,7 +109,6 @@ function drawInfo(ctx, lvls: Level[], x: number, width: number, height: number):
         const lvl = interpolateLevel(altitude, lvls);
 
         const volume = lvl.volume ?? 1;
-        console.log(volume);
 
         let line = y - 25;
         ctx.beginPath();
