@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
+import { HashRouter, Route, Routes, Link } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
@@ -9,7 +9,7 @@ import Thermal from './comp/Thermal';
 
 function App() {
   return (
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <HashRouter basename={process.env.PUBLIC_URL}>
       <div className='velitherm-visu'>
         <header className='header d-flex flex-row'>
           <div className='label2'>
@@ -36,7 +36,7 @@ function App() {
           <p>Build {process.env.REACT_APP_BUILD}</p>
         </small>
       </footer>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
