@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 
 import Slider from './Slider';
 import { ReactComponent as Plus } from '../icons/plus.svg';
@@ -233,6 +234,7 @@ const Thermal = () => {
         drawInfo(ctx, updraftProfile, width * 7 / 8, width, height);
     });
 
+    const intl = useIntl();
     return (
         <React.Fragment><div className='m-2'>
             <div className='d-flex flex-row'>
@@ -241,18 +243,18 @@ const Thermal = () => {
                 <div>
                     <div className='canvas-width d-flex flex-row justify-content-around'>
                         <div>
-                            Humidity
+                            {intl.formatMessage({ defaultMessage: 'Humidity', id: 'CzyxVf' })}
                         </div>
                         <div>
-                            Temperature
+                            {intl.formatMessage({ defaultMessage: 'Temperature', id: 'cG0Q8M' })}
                         </div>
                     </div>
                     <div className='canvas-width d-flex flex-row justify-content-between'>
                         <div>
-                            Atmosphere
+                            {intl.formatMessage({ defaultMessage: 'Atmosphere', id: 'wfBz/D' })}
                         </div>
                         <div>
-                            Updraft
+                            {intl.formatMessage({ defaultMessage: 'Updraft', id: 'u2kBiA' })}
                         </div>
                     </div>
                 </div>
@@ -325,7 +327,8 @@ const Thermal = () => {
             </div>
         </div>
             <div className='my-4'>&nbsp;</div>
-            <Slider title='Updraft Intensity ΔT' units='°C' value={deltaT} min={0} max={1} step={0.1} scale={1} onChange={(v) => setDeltaT(v)} />
+            <Slider title={intl.formatMessage({ defaultMessage: 'Updraft Intensity ΔT', id: 'GBBT7J' })}
+                units='°C' value={deltaT} min={0} max={1} step={0.1} scale={1} onChange={(v) => setDeltaT(v)} />
         </React.Fragment>
     );
 };

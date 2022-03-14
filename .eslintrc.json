@@ -4,7 +4,8 @@
         "@typescript-eslint",
         "react",
         "react-hooks",
-        "eslint-plugin-import"
+        "eslint-plugin-import",
+        "eslint-plugin-formatjs"
     ],
     "env": {
         "browser": true
@@ -55,7 +56,13 @@
                 "avoidEscape": true
             }
         ],
-        "react/jsx-key": "off"
+        "react/jsx-key": "off",
+        "formatjs/enforce-id": [
+            "error",
+            {
+                "idInterpolationPattern": "[sha512:contenthash:base64:6]"
+            }
+        ]
     },
     "settings": {
         "react": {

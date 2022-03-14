@@ -1,7 +1,8 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
+
 import Slider from './Slider';
 import Checkbox from './Checkbox';
-
 import { ReactComponent as Cloud } from '../icons/cloud.svg';
 
 import * as velitherm from 'velitherm';
@@ -9,6 +10,8 @@ import * as velitherm from 'velitherm';
 type LRType = 'malr' | 'dalr' | 'auto' | 'avg' | undefined;
 
 const AirHumidity = () => {
+    const intl = useIntl();
+
     const [temperature, setTemperature] = React.useState(15);
     const [pressure, setPressure] = React.useState(1013);
     const [altitude, setAltitude] = React.useState(velitherm.altitudeFromStandardPressure(pressure));
@@ -105,41 +108,41 @@ const AirHumidity = () => {
     return (
         <div className='d-flex flex-row'>
             <div>
-                <Slider title='Specific Humidity' units='g/kg' value={specificHumidity}
+                <Slider title={intl.formatMessage({ defaultMessage: 'Specific Humidity', id: '1Il19w' })} units='g/kg' value={specificHumidity}
                     min={0} scale={2} max={50} step={0.25} marker={markers.specificHumidity}
                     onChange={(v) => fromSpecificHumidity(v)} />
-                <Slider title='Mixing Ratio' units='g/kg' value={mixingRatio}
+                <Slider title={intl.formatMessage({ defaultMessage: 'Mixing Ratio', id: 'xMPM/i' })} units='g/kg' value={mixingRatio}
                     min={0} max={50} scale={2} step={0.25} marker={markers.mixingRatio}
                     onChange={(v) => fromMixingRatio(v)} />
-                <Slider title='Relative Humidity' units='%' value={relativeHumidity}
+                <Slider title={intl.formatMessage({ defaultMessage: 'Relative Humidity', id: '7QFtvL' })} units='%' value={relativeHumidity}
                     min={0} max={100} displayMax={100} scale={0} step={1} marker={markers.relativeHumidity}
                     onChange={(v) => fromRelativeHumidity(v)} />
-                <Slider title='Dew Point' units='°C' value={dewPoint} marker={markers.dewPoint}
+                <Slider title={intl.formatMessage({ defaultMessage: 'Dew Point', id: 'A+iO8C' })} units='°C' value={dewPoint} marker={markers.dewPoint}
                     min={-50} max={50} displayMax={temperature} scale={1} step={0.5}
                     onChange={(v) => fromDewPoint(v)} />
-                <Slider title='Temperature' units='°C' value={temperature} marker={markers.temperature}
+                <Slider title={intl.formatMessage({ defaultMessage: 'Temperature', id: 'cG0Q8M' })} units='°C' value={temperature} marker={markers.temperature}
                     min={-20} max={40} scale={1} step={0.5}
                     onChange={(v) => fromTemperature(v)} />
-                <Slider title='Pressure' units='hPa' value={pressure} marker={markers.pressure}
+                <Slider title={intl.formatMessage({ defaultMessage: 'Pressure', id: 'NGVQvj' })} units='hPa' value={pressure} marker={markers.pressure}
                     min={velitherm.pressureFromStandardAltitude(maxAlt)} max={velitherm.P0} scale={0} step={5}
                     onChange={(v) => fromPressure(v)} />
-                <Slider title='Altitude' units='m' value={altitude}
+                <Slider title={intl.formatMessage({ defaultMessage: 'Altitude', id: '5YsvtF' })} units='m' value={altitude}
                     min={0} max={maxAlt} scale={0} step={10} marker={markers.altitude}
                     onChange={(v) => fromAltitude(v)} />
                 <div className='d-flex flex-column m-4'>
                     <div>Pressure/Temperature Adiabatic Coupling</div>
-                    <Checkbox<LRType> title='Dry Adiabatic Lapse Rate' id='dalr'
+                    <Checkbox<LRType> title={intl.formatMessage({ defaultMessage: 'Dry Adiabatic Lapse Rate', id: 'LcfKc7' })} id='dalr'
                         info={velitherm.gamma} value={lr} onChange={setLR} />
-                    <Checkbox<LRType> title='Moist Adiabatic Lapse Rate' id='malr'
+                    <Checkbox<LRType> title={intl.formatMessage({ defaultMessage: 'Moist Adiabatic Lapse Rate', id: '9SCokE' })} id='malr'
                         info={velitherm.gammaMoist(temperature, pressure)} value={lr} onChange={setLR} />
-                    <Checkbox<LRType> title='Switch MALR/DALR automatically' id='auto'
+                    <Checkbox<LRType> title={intl.formatMessage({ defaultMessage: 'Switch MALR/DALR automatically', id: 'AGPiqI' })} id='auto'
                         value={lr} onChange={setLR} />
-                    <Checkbox<LRType> title='Average Atmospheric Lapse Rate' id='avg'
+                    <Checkbox<LRType> title={intl.formatMessage({ defaultMessage: 'Average Atmospheric Lapse Rate', id: 'O3Y5BR' })} id='avg'
                         info={6.5e-3} value={lr} onChange={setLR} />
                 </div>
                 <div className='d-flex flex-column m-4'>
                     <span>
-                        Air density:
+                        {intl.formatMessage({ defaultMessage: 'Air density:', id: 'elNIR4' })}
                         <strong className='ms-3'>
                             {density.toFixed(3)}kg/m&sup3;
                         </strong>
@@ -147,13 +150,13 @@ const AirHumidity = () => {
                 </div>
                 <div className='d-flex flex-column m-4'>
                     <span>
-                        Boiling point of water:
+                        {intl.formatMessage({ defaultMessage: 'Boiling point of water:', id: '5e0KCs' })}
                         <strong className='ms-3'>
                             {boilingPoint.toFixed(2)}°C
                         </strong>
                     </span>
                 </div>
-                <label className='label m-4' htmlFor='maxAlt'>Maximum altitude</label>
+                <label className='label m-4' htmlFor='maxAlt'>{intl.formatMessage({ defaultMessage: 'Maximum altitude', id: 'n2Xki0' })}</label>
                 <input id='maxAlt' type='number' value={maxAlt} onChange={(ev) => setMaxAlt(+ev.target.value)} />
                 <div className='d-flex flex-row m-4'>
                     <div className='me-4'>
@@ -168,19 +171,19 @@ const AirHumidity = () => {
                             altitude,
                             density
                         });
-                    }}>Memory</button>
+                        }}>{intl.formatMessage({ defaultMessage: 'Memory', id: 'dVx3yz' })}</button>
                     </div>
                     {
                         markers.specificHumidity !== undefined ?
                             <div className='m-2 p-2 bg-light'>
                                 <table className='label2'><tbody>
-                                    <tr><td>Specific Humidity</td><td className='fw-bold'>{markers.specificHumidity.toFixed(2)}g/kg</td></tr>
-                                    <tr><td>Mixing Ratio</td><td className='fw-bold'>{markers.mixingRatio.toFixed(2)}g/kg</td></tr>
-                                    <tr><td>Relative Humidity</td><td className='fw-bold'>{markers.relativeHumidity.toFixed(0)}%</td></tr>
-                                    <tr><td>Temperature</td><td className='fw-bold'>{markers.temperature.toFixed(1)}°C</td></tr>
-                                    <tr><td>Pressure</td><td className='fw-bold'>{markers.pressure.toFixed(0)}hPa</td></tr>
-                                    <tr><td>Altitude</td><td className='fw-bold'>{markers.altitude.toFixed(0)}m</td></tr>
-                                    <tr><td>Density</td><td className='fw-bold'>{markers.density.toFixed(3)}kg/m&sup3;</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Specific Humidity', id: '1Il19w' })}</td><td className='fw-bold'>{markers.specificHumidity.toFixed(2)}g/kg</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Mixing Ratio', id: 'xMPM/i' })}</td><td className='fw-bold'>{markers.mixingRatio.toFixed(2)}g/kg</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Relative Humidity', id: '7QFtvL' })}</td><td className='fw-bold'>{markers.relativeHumidity.toFixed(0)}%</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Temperature', id: 'cG0Q8M' })}</td><td className='fw-bold'>{markers.temperature.toFixed(1)}°C</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Pressure', id: 'NGVQvj' })}</td><td className='fw-bold'>{markers.pressure.toFixed(0)}hPa</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Altitude', id: '5YsvtF' })}</td><td className='fw-bold'>{markers.altitude.toFixed(0)}m</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Density', id: 'utCd4l' })}</td><td className='fw-bold'>{markers.density.toFixed(3)}kg/m&sup3;</td></tr>
                                 </tbody></table>
                             </div>
                             : null

@@ -1,5 +1,6 @@
 import React from 'react';
-import { HashRouter, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
+import { useIntl } from 'react-intl';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
@@ -8,24 +9,40 @@ import AirHumidity from './comp/AirHumidity';
 import Thermal from './comp/Thermal';
 
 function App() {
+  const intl = useIntl();
+
   return (
-    <HashRouter basename={process.env.PUBLIC_URL}>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <div className='velitherm-visu'>
         <header className='header d-flex flex-row'>
           <div className='label2'>
             <Routes>
-              <Route key='Air Humidity' path={'/'} element={<div>Air Humidity</div>} />
-              <Route key='Thermal Profile' path={'/thermal'} element={<div>Thermal Profile</div>} />
+              <Route key='Air Humidity' path={'/'} element={
+                <div>
+                  {
+                    intl.formatMessage({ defaultMessage: 'Air Humidity', id: 'v3EBLt' })
+                  }
+                </div>} />
+              <Route key='Thermal Profile' path={'/thermal/'} element={
+                <div>
+                  {
+                    intl.formatMessage({ defaultMessage: 'Thermal Profile', id: 'eeYz2i' })
+                  }
+                </div>} />
             </Routes>
           </div>
           <div className='d-flex flex-row justify-content-around px-4'>
-            <Link className='btn btn-primary mx-4' to='/'>Air Humidity</Link>
-            <Link className='btn btn-primary mx-4' to='/thermal'>Thermal Profile</Link>
+            <Link className='btn btn-primary mx-4' to='/'>{
+              intl.formatMessage({ defaultMessage: 'Air Humidity', id: 'v3EBLt' })
+            }</Link>
+            <Link className='btn btn-primary mx-4' to='/thermal/'>{
+              intl.formatMessage({ defaultMessage: 'Thermal Profile', id: 'eeYz2i' })
+            }</Link>
           </div>
         </header>
         <Routes>
           <Route key='Air Humidity' path={'/'} element={<AirHumidity />} />
-          <Route key='Thermal Profile' path={'/thermal'} element={<Thermal />} />
+          <Route key='Thermal Profile' path={'/thermal/'} element={<Thermal />} />
         </Routes>
       </div>
       <footer className='m-4'>
@@ -36,7 +53,7 @@ function App() {
           <p>Build {process.env.REACT_APP_BUILD}</p>
         </small>
       </footer>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
 
