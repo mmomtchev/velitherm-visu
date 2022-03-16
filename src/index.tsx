@@ -10,7 +10,7 @@ import fr from './compiled-lang/fr.json';
 import en from './compiled-lang/en.json';
 
 const userLang = (navigator.language || 'en-US').split('-')[0];
-const messages = { fr, en};
+const messages = { fr, en };
 
 ReactDOM.render(
   <React.StrictMode>

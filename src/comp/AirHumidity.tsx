@@ -184,7 +184,7 @@ const AirHumidity = () => {
                         : null
                 }
                 <div className='border shadow p-1 m-1 my-3 d-flex flex-column'>
-                    <div>Pressure/Temperature Adiabatic Coupling</div>
+                    <div>{intl.formatMessage({ defaultMessage: 'Pressure/Temperature Adiabatic Coupling', id: 'VUfOxx' })}</div>
                     <Checkbox<LRType> title={intl.formatMessage({ defaultMessage: 'Dry Adiabatic Lapse Rate', id: 'LcfKc7' })} id='dalr'
                         info={velitherm.gamma} value={lr} onChange={setLR} />
                     <Checkbox<LRType> title={intl.formatMessage({ defaultMessage: 'Moist Adiabatic Lapse Rate', id: '9SCokE' })} id='malr'

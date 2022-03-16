@@ -5,7 +5,7 @@
     "7QFtvL": "Humidité relative",
     "9SCokE": "Coefficient adiabatique humide",
     "A+iO8C": "Point de rosée",
-    "AGPiqI": "Basculer entre sec/humide",
+    "AGPiqI": "Basculer automatiquement entre sec/humide",
     "CzyxVf": "Humidité",
     "GBBT7J": "Intensité des thermiques ΔT",
     "LcfKc7": "Coefficient adiabatique sec",
@@ -27,5 +27,6 @@
     "c8qwja": "Point d'ébullition :",
     "lOlN1B": "QFF (Atmosphère réelle)",
     "oB8QmG": "Température au sol",
-    "xgnCrJ": "Densité de l'air :"
+    "xgnCrJ": "Densité de l'air :",
+    "VUfOxx": "Couplage adiabatique Pression / Température"
 }
