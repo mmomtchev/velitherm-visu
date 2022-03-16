@@ -68,12 +68,14 @@ const AirHumidity = () => {
     const fromTemperature = (v) => {
         setTemperature(v);
         fromSpecificHumidity(specificHumidity, pressure, v);
+        if (qnh === 'qff')
+            setAltitude(velitherm.altitudeFromPressure(pressure, MSLPressure, (groundTemp + v) /2));
     };
 
     const fromPressure = (v: number, p0: number = MSLPressure, t0: number = groundTemp) => {
         const h = qnh === 'qnh' ?
             velitherm.altitudeFromStandardPressure(v) :
-            velitherm.altitudeFromPressure(v, MSLPressure, (groundTemp + temperature) / 2);
+            velitherm.altitudeFromPressure(v, p0, (t0 + temperature) / 2);
         fromAltitude(h);
     };
 
@@ -159,7 +161,7 @@ const AirHumidity = () => {
                         min={-50} max={50} displayMax={temperature} scale={1} step={0.5}
                         onChange={(v) => fromDewPoint(v)} />
                     <Slider title={intl.formatMessage({ defaultMessage: 'Temperature', id: 'cG0Q8M' })} units='°C' value={temperature} marker={markers.temperature}
-                        min={-20} max={40} scale={1} step={0.5}
+                        min={-40} max={40} scale={1} step={0.5}
                         onChange={(v) => fromTemperature(v)} />
                 </div>
                 <div className='border shadow m-1 my-3'>
