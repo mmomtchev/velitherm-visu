@@ -52,11 +52,8 @@
 }
 
 .cloud {
-  position: absolute;
-  top: 12vh;
-  left: 50vw;
-  width: 50vw;
-  height: 25vh;
+  width: 100%;
+  height: auto;
 }
 
 .button-icon {
