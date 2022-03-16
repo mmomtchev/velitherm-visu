@@ -1,4 +1,5 @@
 import React from 'react';
+import Repeatable from 'react-repeatable';
 
 import { ReactComponent as Plus } from '../icons/plus.svg';
 import { ReactComponent as Minus } from '../icons/minus.svg';
@@ -15,6 +16,19 @@ interface SliderProps {
     marker?: number;
     onChange: (v: number) => void;
 }
+
+const RepeatableButton = ({ onClick, ...props }) => (
+    <Repeatable
+        tag='button'
+        type='button'
+        className='btn'
+        onHold={onClick}
+        onRelease={onClick}
+        repeatDelay={500}
+        repeatInterval={32}
+        {...props}
+    />
+);
 
 const Slider = (props: SliderProps) => {
     const id = props.title.toLowerCase().replace(/ /g, '_');
@@ -38,9 +52,9 @@ const Slider = (props: SliderProps) => {
         <React.Fragment>
             <div className='d-flex flex-row m-2'>
                 <label className='label m-2' htmlFor={id}>{props.title}</label>
-                <button className='btn' onClick={() => props.onChange(clamp(valueSlider - props.step))}>
+                <RepeatableButton onClick={() => props.onChange(clamp(valueSlider - props.step))}>
                     <Minus className='button-icon' />
-                </button>
+                </RepeatableButton>
                 <div className='marker-container'>
                     {props.marker !== undefined ?
                         <div className='marker' style={{ left: '0' }} ref={marker}>&#9650;</div> :
@@ -50,9 +64,9 @@ const Slider = (props: SliderProps) => {
                     min={props.min} max={props.max} step={props.step} onChange={(ev) => {
                         props.onChange(+ev.target.value);
                     }} />
-                <button className='btn' onClick={() => props.onChange(clamp(valueSlider + props.step))}>
+                <RepeatableButton onClick={() => props.onChange(clamp(valueSlider + props.step))}>
                     <Plus className='button-icon' />
-                </button>
+                </RepeatableButton>
                 <p className='units m-2'>
                     <strong>
                         {isNaN(valueText) ? valueText : valueText.toFixed(props.scale)}

@@ -205,7 +205,6 @@ const Thermal = () => {
         }
     ]);
 
-
     const canvas = React.useRef<HTMLCanvasElement>();
 
     const tempMin = levels.reduce((min, lvl) => lvl.temperature < min ? lvl.temperature : min, Infinity);
