@@ -8,13 +8,14 @@ import { ReactComponent as Cloud } from '../icons/cloud.svg';
 import * as velitherm from 'velitherm';
 
 type LRType = 'malr' | 'dalr' | 'auto' | 'avg' | undefined;
+type QType = 'qff' | 'qnh';
 
 const foot = 3.28084;
 
 const AirHumidity = () => {
     const intl = useIntl();
 
-    const [qnh, setQNH] = React.useState<'qnh' | 'qff'>('qnh');
+    const [qType, setQType] = React.useState<QType>('qnh');
     const [temperature, setTemperature] = React.useState(velitherm.T0);
     const [pressure, setPressure] = React.useState(velitherm.P0);
     const [altitude, setAltitude] = React.useState(velitherm.altitudeFromStandardPressure(pressure));
@@ -68,18 +69,18 @@ const AirHumidity = () => {
     const fromTemperature = (v) => {
         setTemperature(v);
         fromSpecificHumidity(specificHumidity, pressure, v);
-        if (qnh === 'qff')
+        if (qType === 'qff')
             setAltitude(velitherm.altitudeFromPressure(pressure, MSLPressure, (groundTemp + v) /2));
     };
 
-    const fromPressure = (v: number, p0: number = MSLPressure, t0: number = groundTemp) => {
-        const h = qnh === 'qnh' ?
+    const fromPressure = (v: number, p0: number = MSLPressure, t0: number = groundTemp, q: QType = qType) => {
+        const h = qType === 'qnh' ?
             velitherm.altitudeFromStandardPressure(v) :
             velitherm.altitudeFromPressure(v, p0, (t0 + temperature) / 2);
-        fromAltitude(h);
+        fromAltitude(h, MSLPressure, groundTemp, q);
     };
 
-    const fromAltitude = (v: number, p0: number = MSLPressure, t0: number = groundTemp) => {
+    const fromAltitude = (v: number, p0: number = MSLPressure, t0: number = groundTemp, q: QType = qType) => {
         let t = temperature;
         if (lr !== undefined) {
             // integrate over the altitude at 10m increments
@@ -100,7 +101,7 @@ const AirHumidity = () => {
         }
         if (t != temperature) setTemperature(t);
         setAltitude(v);
-        const p = qnh === 'qnh' ?
+        const p = q === 'qnh' ?
             velitherm.pressureFromStandardAltitude(v) :
             velitherm.pressureFromAltitude(v, p0, (t0 + temperature) / 2);
         setPressure(p);
@@ -109,12 +110,17 @@ const AirHumidity = () => {
 
     const fromGroundTemp = (v) => {
         setGroundTemp(v);
-        fromPressure(pressure, MSLPressure, v);
+        fromAltitude(altitude, MSLPressure, v);
     };
 
     const fromMSLPressure = (v) => {
         setMSLPressure(v);
-        fromPressure(pressure, v, groundTemp);
+        fromAltitude(altitude, v, groundTemp);
+    };
+
+    const fromQType = (v: QType) => {
+        setQType(v);
+        fromAltitude(altitude, MSLPressure, groundTemp, v);
     };
 
     const boilingPoint = (1 / (1 / 100 -
@@ -134,11 +140,11 @@ const AirHumidity = () => {
                 <div className='border shadow m-1 d-flex flex-row'>
                     <div className='d-flex flex-column m-4 w-100'>
                         <div>
-                            <input id='qnh' type='radio' radioGroup='qnh-qff' checked={qnh === 'qnh'} onChange={() => setQNH('qnh')} />
+                            <input id='qnh' type='radio' radioGroup='qnh-qff' checked={qType === 'qnh'} onChange={() => fromQType('qnh')} />
                             <label className='m-0 mx-1' htmlFor='qnh'>{intl.formatMessage({ defaultMessage: 'QNH (ICAO Standard Atmosphere)', id: 'MUrmtQ' })}</label>
                         </div>
                         <div>
-                            <input id='qff' type='radio' radioGroup='qnh-qff' checked={qnh === 'qff'} onChange={() => setQNH('qff')} />
+                            <input id='qff' type='radio' radioGroup='qnh-qff' checked={qType === 'qff'} onChange={() => fromQType('qff')} />
                             <label className='m-0 mx-1' htmlFor='qff'>{intl.formatMessage({ defaultMessage: 'QFF (Real Atmosphere)', id: 'lOlN1B' })}</label>
                         </div>
                     </div>
@@ -150,38 +156,38 @@ const AirHumidity = () => {
                 <div className='border shadow m-1 my-3'>
                     <Slider title={intl.formatMessage({ defaultMessage: 'Specific Humidity', id: '1Il19w' })} units='g/kg' value={specificHumidity}
                         min={0} scale={2} max={50} step={0.25} marker={markers.specificHumidity}
-                        onChange={(v) => fromSpecificHumidity(v)} />
+                        onChange={fromSpecificHumidity} />
                     <Slider title={intl.formatMessage({ defaultMessage: 'Mixing Ratio', id: 'xMPM/i' })} units='g/kg' value={mixingRatio}
                         min={0} max={50} scale={2} step={0.25} marker={markers.mixingRatio}
-                        onChange={(v) => fromMixingRatio(v)} />
+                        onChange={fromMixingRatio} />
                     <Slider title={intl.formatMessage({ defaultMessage: 'Relative Humidity', id: '7QFtvL' })} units='%' value={relativeHumidity}
                         min={0} max={100} displayMax={100} scale={0} step={1} marker={markers.relativeHumidity}
-                        onChange={(v) => fromRelativeHumidity(v)} />
+                        onChange={fromRelativeHumidity} />
                     <Slider title={intl.formatMessage({ defaultMessage: 'Dew Point', id: 'A+iO8C' })} units='°C' value={dewPoint} marker={markers.dewPoint}
                         min={-50} max={50} displayMax={temperature} scale={1} step={0.5}
-                        onChange={(v) => fromDewPoint(v)} />
+                        onChange={fromDewPoint} />
                     <Slider title={intl.formatMessage({ defaultMessage: 'Temperature', id: 'cG0Q8M' })} units='°C' value={temperature} marker={markers.temperature}
                         min={-40} max={40} scale={1} step={0.5}
-                        onChange={(v) => fromTemperature(v)} />
+                        onChange={fromTemperature} />
                 </div>
                 <div className='border shadow m-1 my-3'>
                     <Slider title={intl.formatMessage({ defaultMessage: 'Pressure', id: 'NGVQvj' })} units='hPa' value={pressure} marker={markers.pressure}
                         min={velitherm.pressureFromStandardAltitude(maxAlt)} max={velitherm.P0 + 20} scale={0} step={5}
-                        onChange={(v) => fromPressure(v)} />
+                        onChange={fromPressure} />
                     <Slider title={intl.formatMessage({ defaultMessage: 'Altitude', id: '5YsvtF' })} units='m' value={altitude}
                         min={0} max={maxAlt} scale={0} step={10} marker={markers.altitude}
-                        onChange={(v) => fromAltitude(v)} />
+                        onChange={fromAltitude} />
                 </div>
                 {
-                    qnh === 'qff' ?
+                    qType === 'qff' ?
                         <div className='border shadow m-1 my-3'>
                             <Slider title={intl.formatMessage({ defaultMessage: 'Ground Temperature', id: 'oB8QmG' })} units='°C' value={groundTemp}
                                 min={-20} max={40} scale={0} step={1}
-                                onChange={(v) => fromGroundTemp(v)} />
+                                onChange={fromGroundTemp} />
                             <Slider title={intl.formatMessage({ defaultMessage: 'MSL Pressure', id: 'Cuavgr' })} units='hPa' value={MSLPressure}
                                 min={velitherm.P0 - 50}
                                 max={velitherm.P0 + 50} scale={0} step={1}
-                                onChange={(v) => fromMSLPressure(v)} />
+                                onChange={fromMSLPressure} />
                         </div>
                         : null
                 }
