@@ -124,7 +124,7 @@ const AirHumidity = () => {
     };
 
     const boilingPoint = (1 / (1 / 100 -
-        velitherm.R * Math.log(pressure / velitherm.P0) / 2500));
+        velitherm.R * Math.log(pressure / velitherm.P0) / velitherm.L * 1e3));
     const density = velitherm.airDensity(relativeHumidity, pressure, temperature);
 
     const waterHeight = relativeHumidity / 100 * 40;

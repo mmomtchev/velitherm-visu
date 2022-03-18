@@ -11,22 +11,6 @@ const maxAlt = 3000;
 const steps = 50;
 const info = 10;
 
-// Compute the adiabatic expansion from the pressure ratio
-//
-// Adiabatic expansion is governed by the Ideal gas law
-// P * V = n * R * T
-// where P=pressure, V=volume, n=molar quantity, R=ideal gas constant, T=temperature
-// Additionally adiabatic expansion is an isentropic process (constant entropy), which gives:
-// V = V0 * (P / P0) ^ (-1 / Gamma) where Gamma is the heat capacity ratio
-// Air is mostly a diatomic gas, so Gamma is 1.4
-//
-// Refer to https://en.wikipedia.org/wiki/Ideal_gas_law
-// (this is not true during condensation)
-
-function adiabaticExpanion(pressure: number, pressure0: number, volume0: number): number {
-    return volume0 * Math.pow(pressure / pressure0, -1 / 1.4);
-}
-
 function tempToColor(tempMin: number, tempMax: number, t: number, invert?: boolean): [number, number, number] {
     let red = 1.0, green = 1.0, blue = 1.0;
     const dv = tempMax - tempMin;
@@ -79,7 +63,8 @@ function interpolateLevel(altitude: number, lvls: Level[]): Level {
             const p0 = velitherm.pressureFromStandardAltitude(lvls[i].altitude);
             const rh = velitherm.relativeHumidity(q, p, temperature);
             const density = velitherm.airDensity(rh, p, temperature);
-            const volume = lvls[i].volume !== undefined ? adiabaticExpanion(p, p0, lvls[i].volume) : undefined;
+            const volume = lvls[i].volume !== undefined ?
+                velitherm.adiabaticExpansion(lvls[i].volume, p, p0) : undefined;
             return {
                 altitude,
                 temperature,
@@ -173,7 +158,7 @@ function computeUpdraftProfile(lvls: Level[], deltaT: number): Level[] {
             (rh < 100 ?
                 velitherm.gamma :
                 velitherm.gammaMoist(updraftProfile[i - 1].temperature, p));
-        const volume = adiabaticExpanion(p, p0, updraftProfile[i - 1].volume);
+        const volume = velitherm.adiabaticExpansion(updraftProfile[i - 1].volume, p, p0);
         const l: Level = {
             altitude,
             temperature,
