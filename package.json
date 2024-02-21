@@ -50,7 +50,7 @@
     "@formatjs/cli": "^4.8.2",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^12.1.4",
-    "@testing-library/user-event": "^13.5.0",
+    "@testing-library/user-event": "^14.5.2",
     "eslint-plugin-formatjs": "^3.0.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
