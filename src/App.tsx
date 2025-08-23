@@ -7,6 +7,7 @@ import './App.css';
 
 import AirHumidity from './comp/AirHumidity';
 import Thermal from './comp/Thermal';
+import FlightLevels from './comp/FlightLevels';
 
 function App() {
   const intl = useIntl();
@@ -29,6 +30,12 @@ function App() {
                     intl.formatMessage({ defaultMessage: 'Thermal Profile', id: 'eeYz2i' })
                   }
                 </div>} />
+              <Route key='Thermal Profile' path={'/FL/'} element={
+                <div>
+                  {
+                    intl.formatMessage({ defaultMessage: 'Flight Level', id: 'flight_level' })
+                  }
+                </div>} />
             </Routes>
           </div>
           <div className='d-flex flex-row justify-content-around px-4'>
@@ -38,11 +45,15 @@ function App() {
             <Link className='btn btn-primary mx-4' to='/thermal/'>{
               intl.formatMessage({ defaultMessage: 'Thermal Profile', id: 'eeYz2i' })
             }</Link>
+            <Link className='btn btn-primary mx-4' to='/FL/'>{
+              intl.formatMessage({ defaultMessage: 'Flight Level', id: 'flight_level' })
+            }</Link>
           </div>
         </header>
         <Routes>
           <Route key='Air Humidity' path={'/'} element={<AirHumidity />} />
           <Route key='Thermal Profile' path={'/thermal/'} element={<Thermal />} />
+          <Route key='Flight Levels' path={'/FL/'} element={<FlightLevels />} />
         </Routes>
       </div>
       <footer className='m-4'>

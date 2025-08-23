@@ -9,7 +9,7 @@
     "react-intl": "^7.1.11",
     "react-repeatable": "^2.0.1",
     "react-router-dom": "^7.8.2",
-    "velitherm": "^1.2.0",
+    "velitherm": "github:mmomtchev/velitherm",
     "vite-plugin-svgr": "^4.3.0"
   },
   "scripts": {

@@ -10,8 +10,6 @@ import * as velitherm from 'velitherm';
 type LRType = 'malr' | 'dalr' | 'auto' | 'avg' | undefined;
 type QType = 'qff' | 'qnh';
 
-const foot = 3.28084;
-
 const AirHumidity = () => {
     const intl = useIntl();
 
@@ -37,9 +35,18 @@ const AirHumidity = () => {
         relativeHumidity: undefined,
         dewPoint: undefined,
         density: undefined
+    } as {
+        temperature: undefined | number,
+        pressure: undefined | number,
+        altitude: undefined | number,
+        specificHumidity: undefined | number,
+        mixingRatio: undefined | number,
+        relativeHumidity: undefined | number,
+        dewPoint: undefined | number,
+        density: undefined | number
     });
 
-    const fromSpecificHumidity = (v, p?: number, t?: number) => {
+    const fromSpecificHumidity = (v: number, p?: number, t?: number) => {
         setSpecificHumidity(v);
         setMixingRatio(velitherm.mixingRatio(v));
         const rh = velitherm.relativeHumidity(v, p ?? pressure, t ?? temperature);
@@ -47,26 +54,26 @@ const AirHumidity = () => {
         setDewPoint(velitherm.dewPoint(rh, t ?? temperature));
     };
 
-    const fromMixingRatio = (v) => {
+    const fromMixingRatio = (v: number) => {
         setMixingRatio(v);
         const q = velitherm.specificHumidityFromMixingRatio(v);
         fromSpecificHumidity(q);
     };
 
-    const fromRelativeHumidity = (v) => {
+    const fromRelativeHumidity = (v: number) => {
         setRelativeHumidity(v);
         const q = velitherm.specificHumidity(v, pressure, temperature);
         fromSpecificHumidity(q);
     };
 
-    const fromDewPoint = (v) => {
+    const fromDewPoint = (v: number) => {
         setDewPoint(v);
         const q =
             velitherm.specificHumidity(velitherm.relativeHumidityFromDewPoint(v, temperature), pressure, temperature);
         fromSpecificHumidity(q);
     };
 
-    const fromTemperature = (v) => {
+    const fromTemperature = (v: number) => {
         setTemperature(v);
         fromSpecificHumidity(specificHumidity, pressure, v);
         if (qType === 'qff')
@@ -108,12 +115,12 @@ const AirHumidity = () => {
         fromSpecificHumidity(specificHumidity, p, t);
     };
 
-    const fromGroundTemp = (v) => {
+    const fromGroundTemp = (v: number) => {
         setGroundTemp(v);
         fromAltitude(altitude, MSLPressure, v);
     };
 
-    const fromMSLPressure = (v) => {
+    const fromMSLPressure = (v: number) => {
         setMSLPressure(v);
         fromAltitude(altitude, v, groundTemp);
     };
@@ -132,7 +139,7 @@ const AirHumidity = () => {
     const bottleHeight = (50 * bottleFactor / 100) + 'vh';
     const bottleWidth = (20 * bottleFactor / 100) + 'vh';
 
-    const flightLevel = velitherm.altitudeFromStandardPressure(pressure) * foot / 100;
+    const flightLevel = velitherm.FLFromPressure(pressure);
 
     return (
         <div className='d-flex flex-row'>
@@ -242,12 +249,12 @@ const AirHumidity = () => {
                             <div className='m-2 p-2 bg-light'>
                                 <table className='label2'><tbody>
                                     <tr><td>{intl.formatMessage({ defaultMessage: 'Specific Humidity', id: '1Il19w' })}</td><td className='fw-bold'>{markers.specificHumidity.toFixed(2)}g/kg</td></tr>
-                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Mixing Ratio', id: 'xMPM/i' })}</td><td className='fw-bold'>{markers.mixingRatio.toFixed(2)}g/kg</td></tr>
-                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Relative Humidity', id: '7QFtvL' })}</td><td className='fw-bold'>{markers.relativeHumidity.toFixed(0)}%</td></tr>
-                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Temperature', id: 'cG0Q8M' })}</td><td className='fw-bold'>{markers.temperature.toFixed(1)}°C</td></tr>
-                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Pressure', id: 'NGVQvj' })}</td><td className='fw-bold'>{markers.pressure.toFixed(0)}hPa</td></tr>
-                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Altitude', id: '5YsvtF' })}</td><td className='fw-bold'>{markers.altitude.toFixed(0)}m</td></tr>
-                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Density', id: 'utCd4l' })}</td><td className='fw-bold'>{markers.density.toFixed(3)}kg/m&sup3;</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Mixing Ratio', id: 'xMPM/i' })}</td><td className='fw-bold'>{markers.mixingRatio!.toFixed(2)}g/kg</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Relative Humidity', id: '7QFtvL' })}</td><td className='fw-bold'>{markers.relativeHumidity!.toFixed(0)}%</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Temperature', id: 'cG0Q8M' })}</td><td className='fw-bold'>{markers.temperature!.toFixed(1)}°C</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Pressure', id: 'NGVQvj' })}</td><td className='fw-bold'>{markers.pressure!.toFixed(0)}hPa</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Altitude', id: '5YsvtF' })}</td><td className='fw-bold'>{markers.altitude!.toFixed(0)}m</td></tr>
+                                    <tr><td>{intl.formatMessage({ defaultMessage: 'Density', id: 'utCd4l' })}</td><td className='fw-bold'>{markers.density!.toFixed(3)}kg/m&sup3;</td></tr>
                                 </tbody></table>
                             </div>
                             : null

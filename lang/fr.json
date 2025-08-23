@@ -28,5 +28,15 @@
     "lOlN1B": "QFF (Atmosphère réelle)",
     "oB8QmG": "Température au sol",
     "xgnCrJ": "Densité de l'air :",
-    "VUfOxx": "Couplage adiabatique Pression / Température"
+    "VUfOxx": "Couplage adiabatique Pression / Température",
+    "alt_of": "Altitude de",
+    "bad_winter": "Par mauvais temps en hiver",
+    "flight_level": "Flight Level",
+    "given_conditions": "Pour les conditions saisies",
+    "heat_wave": "En période de canicule",
+    "icao_std": "En conditions OACI normalisées",
+    "pressure_ground": "Pression au sol réduite au niveau de la mer",
+    "pressure_level": "Pression au niveau donné",
+    "temp_air_column": "Température moyenne de la colonne d'air",
+    "temp_amsl": "Température de l'air au niveau de la mer"
 }
