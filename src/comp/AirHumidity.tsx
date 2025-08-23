@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 
 import Slider from './Slider';
 import Checkbox from './Checkbox';
-import { ReactComponent as Cloud } from '../icons/cloud.svg';
+import Cloud from '../icons/cloud.svg?react';
 
 import * as velitherm from 'velitherm';
 
@@ -70,7 +70,7 @@ const AirHumidity = () => {
         setTemperature(v);
         fromSpecificHumidity(specificHumidity, pressure, v);
         if (qType === 'qff')
-            setAltitude(velitherm.altitudeFromPressure(pressure, MSLPressure, (groundTemp + v) /2));
+            setAltitude(velitherm.altitudeFromPressure(pressure, MSLPressure, (groundTemp + v) / 2));
     };
 
     const fromPressure = (v: number, p0: number = MSLPressure, t0: number = groundTemp, q: QType = qType) => {

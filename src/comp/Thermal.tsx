@@ -2,8 +2,8 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 
 import Slider from './Slider';
-import { ReactComponent as Plus } from '../icons/plus.svg';
-import { ReactComponent as Minus } from '../icons/minus.svg';
+import Plus from '../icons/plus.svg?react';
+import Minus from '../icons/minus.svg?react';
 
 import * as velitherm from 'velitherm';
 
@@ -64,7 +64,7 @@ function interpolateLevel(altitude: number, lvls: Level[]): Level {
             const rh = velitherm.relativeHumidity(q, p, temperature);
             const density = velitherm.airDensity(rh, p, temperature);
             const volume = lvls[i].volume !== undefined ?
-                velitherm.adiabaticExpansion(lvls[i].volume, p, p0) : undefined;
+                velitherm.adiabaticExpansion(lvls[i].volume!, p, p0) : undefined;
             return {
                 altitude,
                 temperature,
@@ -82,7 +82,7 @@ function centerText(ctx: CanvasRenderingContext2D, text: string, x: number, y: n
     ctx.fillText(text, x - text.length * 4 - 10, y);
 }
 
-function drawInfo(ctx, lvls: Level[], x: number, width: number, height: number): void {
+function drawInfo(ctx: CanvasRenderingContext2D, lvls: Level[], x: number, width: number, height: number): void {
     for (let i = 0; i < info; i++) {
         const altitude = (i + 0.5) * maxAlt / info;
 
@@ -158,7 +158,7 @@ function computeUpdraftProfile(lvls: Level[], deltaT: number): Level[] {
             (rh < 100 ?
                 velitherm.gamma :
                 velitherm.gammaMoist(updraftProfile[i - 1].temperature, p));
-        const volume = velitherm.adiabaticExpansion(updraftProfile[i - 1].volume, p, p0);
+        const volume = velitherm.adiabaticExpansion(updraftProfile[i - 1].volume!, p, p0);
         const l: Level = {
             altitude,
             temperature,
@@ -190,7 +190,7 @@ const Thermal = () => {
         }
     ]);
 
-    const canvas = React.useRef<HTMLCanvasElement>();
+    const canvas = React.useRef<HTMLCanvasElement>(null);
 
     const tempMin = levels.reduce((min, lvl) => lvl.temperature < min ? lvl.temperature : min, Infinity);
     const tempMax = levels.reduce((max, lvl) => lvl.temperature > max ? lvl.temperature : max, -Infinity) + deltaT;
@@ -200,7 +200,7 @@ const Thermal = () => {
     const updraftProfile = computeUpdraftProfile(atmoProfile, deltaT);
 
     React.useEffect(() => {
-        const ctx = canvas.current.getContext('2d');
+        const ctx = canvas.current!.getContext('2d') as CanvasRenderingContext2D;
         const width = ctx.canvas.width;
         const height = ctx.canvas.height;
         ctx.font = '18px sans-serif';
@@ -274,7 +274,7 @@ const Thermal = () => {
                     {
                         levels.map((lvl, i) => {
                             const y = lvl.altitude / maxAlt;
-                            let plusAlt: number = undefined;
+                            let plusAlt: number | undefined = undefined;
                             if (i > 0)
                                 plusAlt = (levels[i - 1].altitude + lvl.altitude) / 2;
                             return (<React.Fragment key={lvl.altitude}>
@@ -315,11 +315,11 @@ const Thermal = () => {
                                 </div>
                                 {i > 0 ?
                                     <div className='level-label d-flex flex-row justify-content-end'
-                                        style={{ position: 'absolute', top: `calc(80vh * (1 - ${plusAlt / maxAlt}) - 1rem)` }}>
+                                        style={{ position: 'absolute', top: `calc(80vh * (1 - ${plusAlt! / maxAlt}) - 1rem)` }}>
                                         <button className='btn m-0 p-0' onClick={() => {
-                                            const def = interpolateLevel(plusAlt, atmoProfile);
+                                            const def = interpolateLevel(plusAlt!, atmoProfile);
                                             setLevels([...levels, {
-                                                altitude: plusAlt,
+                                                altitude: plusAlt!,
                                                 rh: def.rh,
                                                 temperature: def.temperature
                                             }]);

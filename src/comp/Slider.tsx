@@ -1,8 +1,8 @@
 import React from 'react';
 import Repeatable from 'react-repeatable';
 
-import { ReactComponent as Plus } from '../icons/plus.svg';
-import { ReactComponent as Minus } from '../icons/minus.svg';
+import Plus from '../icons/plus.svg?react';
+import Minus from '../icons/minus.svg?react';
 
 interface SliderProps {
     title: string;

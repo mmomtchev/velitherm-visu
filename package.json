@@ -3,33 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/jest": "^30.0.0",
-    "@types/node": "^24.3.0",
-    "@types/react": "^17.0.40",
-    "@types/react-dom": "^17.0.13",
+    "@vitejs/plugin-react": "^5.0.1",
     "bootstrap": "^5.3.7",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react-dom": "^19.1.1",
     "react-intl": "^7.1.11",
     "react-repeatable": "^2.0.1",
     "react-router-dom": "^7.8.2",
-    "react-scripts": "5.0.1",
     "velitherm": "^1.2.0",
-    "web-vitals": "^5.1.0"
+    "vite-plugin-svgr": "^4.3.0"
   },
   "scripts": {
-    "start": "REACT_APP_BUILD=\"dev-`git log --format='%h' -n 1` from `date -I`\" react-scripts start",
-    "build": "REACT_APP_BUILD=\"`git log --format='%h' -n 1` from `date -I`\" react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "extract": "formatjs extract src/App.tsx src/comp/*.tsx --out-file lang/en.json --format simple",
-    "compile": "formatjs compile --format simple lang/fr.json --ast --out-file src/compiled-lang/fr.json && formatjs compile --format simple lang/en.json --ast --out-file src/compiled-lang/en.json"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "start": "VITE_BUILD=\"dev-`git log --format='%h' -n 1` from `date -I`\" npx vite",
+    "build": "VITE_BUILD=\"`git log --format='%h' -n 1` from `date -I`\" npx vite build",
+    "serve": "npx vite preview",
+    "dev": "npx vite dev",
+    "extract": "npx formatjs extract src/App.tsx src/comp/*.tsx --out-file lang/en.json --format simple",
+    "compile": "npx formatjs compile --format simple lang/fr.json --ast --out-file src/compiled-lang/fr.json && formatjs compile --format simple lang/en.json --ast --out-file src/compiled-lang/en.json"
   },
   "browserslist": {
     "production": [
@@ -44,17 +33,19 @@
     ]
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.28.3",
-    "@babel/preset-react": "^7.27.1",
-    "@babel/preset-typescript": "^7.27.1",
+    "@eslint/js": "^9.34.0",
     "@formatjs/cli": "^6.7.2",
-    "@testing-library/jest-dom": "^6.8.0",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^14.6.1",
-    "eslint-plugin-formatjs": "^5.4.0",
-    "eslint-plugin-react": "^7.37.5",
+    "@types/react": "^19.1.11",
+    "@types/react-dom": "^19.1.7",
+    "@types/react-router-dom": "^5.3.3",
+    "@typescript-eslint/eslint-plugin": "^8.40.0",
+    "@typescript-eslint/parser": "^8.40.0",
+    "eslint": "^9.34.0",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "typescript": "^5.9.2"
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.40.0",
+    "vite-plugin-eslint": "^1.8.1"
   },
   "license": "GPL-3.0"
 }
