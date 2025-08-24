@@ -12,6 +12,8 @@ const Pmax = 1025;
 const FLmin = 50;
 const FLmax = 350;
 
+const elr = 0.0057;
+
 const Altitude = (props: {v: number}) => {
   return <div className='d-flex flex-column'>
     <strong className='text-nowrap'>{Math.round(props.v)} m</strong>
@@ -27,7 +29,7 @@ const FlightLevels = () => {
   const [FL, setFL] = React.useState(115);
   const [P, setP] = React.useState(velitherm.pressureFromFL(FL));
   const [alt, setAlt] = React.useState(velitherm.altitudeFromPressure(P, P0, T));
-  const [T0, setT0] = React.useState(T + (alt / 2) * velitherm.gamma);
+  const [T0, setT0] = React.useState(T + (alt / 2) * elr);
   const [altStd, setAltStd] = React.useState(velitherm.altitudeFromStandardPressure(P));
   const [altMin, setAltMin] = React.useState(velitherm.altitudeFromPressure(P, Pmin, Tmin));
   const [altMax, setAltMax] = React.useState(velitherm.altitudeFromPressure(P, Pmax, Tmax));
@@ -41,7 +43,7 @@ const FlightLevels = () => {
     setAltMin(velitherm.altitudeFromPressure(newP, Pmin, Tmin));
     setAltMax(velitherm.altitudeFromPressure(newP, Pmax, Tmax));
     setAltStd(velitherm.altitudeFromStandardPressure(newP));
-    setT0(T + (newAlt / 2) * velitherm.gamma);
+    setT0(T + (newAlt / 2) * elr);
   };
 
   const fromPressure = (newP: number) => {
@@ -52,7 +54,7 @@ const FlightLevels = () => {
     setAltMin(velitherm.altitudeFromPressure(newP, Pmin, Tmin));
     setAltMax(velitherm.altitudeFromPressure(newP, Pmax, Tmax));
     setAltStd(velitherm.altitudeFromStandardPressure(newP));
-    setT0(T + (newAlt / 2) * velitherm.gamma);
+    setT0(T + (newAlt / 2) * elr);
   };
 
   const fromP0 = (newP0: number) => {
@@ -62,7 +64,7 @@ const FlightLevels = () => {
     setAltMin(velitherm.altitudeFromPressure(P, Pmin, Tmin));
     setAltMax(velitherm.altitudeFromPressure(P, Pmax, Tmax));
     setAltStd(velitherm.altitudeFromStandardPressure(P));
-    setT0(T + (newAlt / 2) * velitherm.gamma);
+    setT0(T + (newAlt / 2) * elr);
   };
 
   const fromT = (newT: number) => {
@@ -72,7 +74,7 @@ const FlightLevels = () => {
     setAltMin(velitherm.altitudeFromPressure(P, Pmin, Tmin));
     setAltMax(velitherm.altitudeFromPressure(P, Pmax, Tmax));
     setAltStd(velitherm.altitudeFromStandardPressure(P));
-    setT0(T + (newAlt / 2) * velitherm.gamma);
+    setT0(T + (newAlt / 2) * elr);
   };
 
   return (
