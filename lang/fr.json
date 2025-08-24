@@ -38,5 +38,5 @@
     "pressure_ground": "Pression au sol réduite au niveau de la mer",
     "pressure_level": "Pression au niveau donné",
     "temp_air_column": "Température moyenne de la colonne d'air",
-    "temp_amsl": "Température de l'air au niveau de la mer"
+    "temp_amsl": "Température de l'air calme au niveau de la mer"
 }

@@ -9,6 +9,8 @@ const Tmin = -30;
 const Tmax = 20;
 const Pmin = 1000;
 const Pmax = 1025;
+const FLmin = 50;
+const FLmax = 350;
 
 const FlightLevels = () => {
   const intl = useIntl();
@@ -73,11 +75,11 @@ const FlightLevels = () => {
           <div className='m-1 p-1'>Flight Level</div>
           <Slider title={intl.formatMessage({ defaultMessage: 'Flight Level', id: 'flight_level' })}
             units='FL' value={FL} prefix={true}
-            min={0} scale={0} max={150} step={5}
+            min={FLmin} scale={0} max={FLmax} step={5}
             onChange={fromFL} />
           <Slider title={intl.formatMessage({ defaultMessage: 'Pressure at given level', id: 'pressure_level' })}
-            units='hPa' value={P}
-            min={0} scale={0} max={1050} step={1}
+            units='hPa' value={P} scale={0} step={1}
+            min={velitherm.pressureFromFL(FLmax)} max={velitherm.pressureFromFL(FLmin)}
             onChange={fromPressure} />
         </div>
         <div className='border m-1 p-1'>
@@ -88,7 +90,7 @@ const FlightLevels = () => {
             onChange={fromP0} />
           <Slider title={intl.formatMessage({ defaultMessage: 'Mean temperature of the air column', id: 'temp_air_column' })}
             units='°C' value={T}
-            min={Tmin - 10} max={Tmax + 10} scale={0} step={1}
+            min={Tmin - 30} max={Tmax + 10} scale={0} step={1}
             onChange={fromT} />
         </div>
       </div>
