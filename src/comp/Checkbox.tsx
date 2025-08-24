@@ -5,10 +5,10 @@ interface Props<T> {
     id: T;
     value: T;
     info?: number;
-    onChange: (v: T) => void
+    onChange: (v: T | undefined) => void
 }
 
-const Checkbox = <T extends string>(props: Props<T>) => {
+const Checkbox = <T extends (string | undefined)>(props: Props<T>) => {
     return (
         <div className='d-flex flex-row'>
             <label className='label2' htmlFor={props.id}>{props.title}</label>

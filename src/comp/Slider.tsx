@@ -14,6 +14,7 @@ interface SliderProps {
     scale: number;
     displayMax?: number;
     marker?: number;
+    prefix?: boolean;
     onChange: (v: number) => void;
 }
 
@@ -38,12 +39,12 @@ const Slider = (props: SliderProps) => {
         valueText = props.displayMax;
     const clamp = (v: number) => Math.max(Math.min(v, props.max), props.min);
 
-    const slider = React.useRef<HTMLInputElement>();
-    const marker = React.useRef<HTMLDivElement>();
+    const slider = React.useRef<HTMLInputElement>(null);
+    const marker = React.useRef<HTMLDivElement>(null);
     React.useLayoutEffect(() => {
         if (marker.current) {
-            const width = slider.current.clientWidth - 18;
-            const offset = (props.marker - props.min) / (props.max - props.min) * width;
+            const width = slider.current!.clientWidth - 18;
+            const offset = (props.marker! - props.min) / (props.max - props.min) * width;
             marker.current.style.left = Math.max(Math.min(offset, width), 0) + 'px';
         }
     });
@@ -67,10 +68,11 @@ const Slider = (props: SliderProps) => {
                 <RepeatableButton onClick={() => props.onChange(clamp(valueSlider + props.step))}>
                     <Plus className='button-icon' />
                 </RepeatableButton>
-                <p className='units m-2'>
+                <p className='units m-2 text-nowrap'>
                     <strong>
+                        {!!props.prefix && props.units + ' '}
                         {isNaN(valueText) ? valueText : valueText.toFixed(props.scale)}
-                        {props.units}
+                        {!props.prefix && ' ' + props.units}
                     </strong>
                 </p>
             </div>
