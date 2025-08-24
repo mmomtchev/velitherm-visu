@@ -90,7 +90,7 @@ const FlightLevels = () => {
             onChange={fromPressure} />
             <div className='container'>
           <div className='row align-items-center my-3'>
-            <div className='col-8'>{intl.formatMessage({ defaultMessage: 'Virtual altitude displayed on the altimeter in QNF mode', id: 'altimeter_QNH' })}</div>
+            <div className='col-8'>{intl.formatMessage({ defaultMessage: 'Virtual altitude displayed on the altimeter in QNH mode', id: 'altimeter_QNH' })}</div>
             <div className='col-4'><Altitude v={FL * 100 / velitherm.feetPerMeter} /></div>
             </div>
           </div>
