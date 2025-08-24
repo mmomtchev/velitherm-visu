@@ -5,8 +5,8 @@ import Slider from './Slider';
 
 import * as velitherm from 'velitherm';
 
-const Tmin = -30;
-const Tmax = 20;
+const Tmin = -20;
+const Tmax = 40;
 const Pmin = 1000;
 const Pmax = 1025;
 const FLmin = 50;
@@ -22,57 +22,70 @@ const Altitude = (props: {v: number}) => {
 const FlightLevels = () => {
   const intl = useIntl();
 
-  const [T, setT] = React.useState(-3);
+  const [T0, setT0] = React.useState(velitherm.T0);
   const [P0, setP0] = React.useState(velitherm.P0);
   const [FL, setFL] = React.useState(115);
   const [P, setP] = React.useState(velitherm.pressureFromFL(FL));
-  const [alt, setAlt] = React.useState(velitherm.altitudeFromPressure(P, P0, T));
-  const [T0, setT0] = React.useState(T + (alt / 2) * velitherm.ELR);
+  const [T, setT] = React.useState(velitherm.adiabaticCooling(T0, P, P0));
+  const [Tmean, setTmean] = React.useState((T0 + T) / 2);
+  const [alt, setAlt] = React.useState(velitherm.altitudeFromPressure(P, P0, Tmean));
   const [altStd, setAltStd] = React.useState(velitherm.altitudeFromStandardPressure(P));
-  const [altMin, setAltMin] = React.useState(velitherm.altitudeFromPressure(P, Pmin, Tmin));
-  const [altMax, setAltMax] = React.useState(velitherm.altitudeFromPressure(P, Pmax, Tmax));
+  const [altMin, setAltMin] = React.useState(velitherm.altitudeFromPressure(P, Pmin, (Tmin + velitherm.adiabaticCooling(Tmin, P, P0)) / 2));
+  const [altMax, setAltMax] = React.useState(velitherm.altitudeFromPressure(P, Pmax, (Tmax + velitherm.adiabaticCooling(Tmax, P, P0)) / 2));
 
   const fromFL = (newFL: number) => {
     const newP = velitherm.pressureFromFL(newFL);
-    const newAlt = velitherm.altitudeFromPressure(newP, P0, T);
+    const newT = velitherm.adiabaticCooling(T0, newP, P0);
+    const newTmean = (T0 + newT) / 2;
+    const newAlt = velitherm.altitudeFromPressure(newP, P0, newTmean);
     setFL(newFL);
     setP(newP);
     setAlt(newAlt);
-    setAltMin(velitherm.altitudeFromPressure(newP, Pmin, Tmin));
-    setAltMax(velitherm.altitudeFromPressure(newP, Pmax, Tmax));
+    setT(newT);
+    setTmean(newTmean);
+    setAltMin(velitherm.altitudeFromPressure(newP, Pmin, (Tmin + velitherm.adiabaticCooling(Tmin, newP, P0)) / 2));
+    setAltMax(velitherm.altitudeFromPressure(newP, Pmax, (Tmax + velitherm.adiabaticCooling(Tmax, newP, P0)) / 2));
     setAltStd(velitherm.altitudeFromStandardPressure(newP));
-    setT0(T + (newAlt / 2) * velitherm.ELR);
   };
 
   const fromPressure = (newP: number) => {
-    const newAlt = velitherm.altitudeFromPressure(newP, P0, T);
+    const newT = velitherm.adiabaticCooling(T0, newP, P0);
+    const newTmean = (T0 + newT) / 2;
+    const newAlt = velitherm.altitudeFromPressure(newP, P0, newTmean);
     setP(newP);
     setFL(velitherm.FLFromPressure(newP));
     setAlt(newAlt);
-    setAltMin(velitherm.altitudeFromPressure(newP, Pmin, Tmin));
-    setAltMax(velitherm.altitudeFromPressure(newP, Pmax, Tmax));
+    setT(newT);
+    setTmean(newTmean);
+    setAltMin(velitherm.altitudeFromPressure(newP, Pmin, (Tmin + velitherm.adiabaticCooling(Tmin, newP, P0)) / 2));
+    setAltMax(velitherm.altitudeFromPressure(newP, Pmax, (Tmax + velitherm.adiabaticCooling(Tmax, newP, P0)) / 2));
     setAltStd(velitherm.altitudeFromStandardPressure(newP));
-    setT0(T + (newAlt / 2) * velitherm.ELR);
   };
 
   const fromP0 = (newP0: number) => {
-    const newAlt = velitherm.altitudeFromPressure(P, newP0, T);
+    const newT = velitherm.adiabaticCooling(T0, P, newP0);
+    const newTmean = (T0 + newT) / 2;
+    const newAlt = velitherm.altitudeFromPressure(P, newP0, newTmean);
     setP0(newP0);
     setAlt(newAlt);
-    setAltMin(velitherm.altitudeFromPressure(P, Pmin, Tmin));
-    setAltMax(velitherm.altitudeFromPressure(P, Pmax, Tmax));
+    setT(newT);
+    setTmean(newTmean);
+    setAltMin(velitherm.altitudeFromPressure(P, Pmin, (Tmin + velitherm.adiabaticCooling(Tmin, P, newP0)) / 2));
+    setAltMax(velitherm.altitudeFromPressure(P, Pmax, (Tmax + velitherm.adiabaticCooling(Tmax, P, newP0)) / 2));
     setAltStd(velitherm.altitudeFromStandardPressure(P));
-    setT0(T + (newAlt / 2) * velitherm.ELR);
   };
 
-  const fromT = (newT: number) => {
-    const newAlt = velitherm.altitudeFromPressure(P, P0, newT);
+  const fromT0 = (newT0: number) => {
+    const newT = velitherm.adiabaticCooling(newT0, P, P0);
+    const newTmean = (newT0 + newT) / 2;
+    const newAlt = velitherm.altitudeFromPressure(P, P0, newTmean);
+    setT0(newT0);
+    setTmean(newTmean);
     setT(newT);
     setAlt(newAlt);
-    setAltMin(velitherm.altitudeFromPressure(P, Pmin, Tmin));
+    setAltMin(velitherm.altitudeFromPressure(P, Pmin, (Tmin + velitherm.adiabaticCooling(Tmin, P, P0)) / 2));
     setAltMax(velitherm.altitudeFromPressure(P, Pmax, Tmax));
     setAltStd(velitherm.altitudeFromStandardPressure(P));
-    setT0(T + (newAlt / 2) * velitherm.ELR);
   };
 
   return (
@@ -102,14 +115,18 @@ const FlightLevels = () => {
             min={950} max={1050} scale={0} step={1}
             onChange={fromP0} />
           <div className='border m-0 p-0'>
-            <Slider title={intl.formatMessage({ defaultMessage: 'Mean temperature of the air column', id: 'temp_air_column' })}
-              units='°C' value={T}
-              min={Tmin - 30} max={Tmax + 10} scale={0} step={1}
-              onChange={fromT} />
+            <Slider title={intl.formatMessage({ defaultMessage: 'Air temperature at MSL', id: 'temp_air_msl' })}
+              units='°C' value={T0}
+              min={Tmin} max={Tmax} scale={0} step={1}
+              onChange={fromT0} />
             <div className='container'>
               <div className='row'>
-                <div className='col-8'>{intl.formatMessage({ defaultMessage: 'Estimate of the approximate air temperature at MSL in calm air', id: 'temp_amsl' })}</div>
-                <div className='col-4'><strong className='text-nowrap'>{Math.round(T0)} °C</strong></div>
+                <div className='col-8'>{intl.formatMessage({ defaultMessage: 'Air temperature at the given level', id: 'temp_level' })}</div>
+                <div className='col-4'><strong className='text-nowrap'>{Math.round(T)} °C</strong></div>
+              </div>
+              <div className='row'>
+                <div className='col-8'>{intl.formatMessage({ defaultMessage: 'Mean temperature of the air column', id: 'temp_column' })}</div>
+                <div className='col-4'><strong className='text-nowrap'>{Math.round(Tmean)} °C</strong></div>
               </div>
             </div>
           </div>
