@@ -68,7 +68,7 @@ const Slider = (props: SliderProps) => {
                 <RepeatableButton onClick={() => props.onChange(clamp(valueSlider + props.step))}>
                     <Plus className='button-icon' />
                 </RepeatableButton>
-                <p className='units m-2'>
+                <p className='units m-2 text-nowrap'>
                     <strong>
                         {!!props.prefix && props.units + ' '}
                         {isNaN(valueText) ? valueText : valueText.toFixed(props.scale)}
