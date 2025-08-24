@@ -18,7 +18,8 @@
     "serve": "npx vite preview",
     "dev": "npx vite dev",
     "extract": "npx formatjs extract src/App.tsx src/comp/*.tsx --out-file lang/en.json --format simple",
-    "compile": "npx formatjs compile --format simple lang/fr.json --ast --out-file src/compiled-lang/fr.json && formatjs compile --format simple lang/en.json --ast --out-file src/compiled-lang/en.json"
+    "compile": "npx formatjs compile --format simple lang/fr.json --ast --out-file src/compiled-lang/fr.json && formatjs compile --format simple lang/en.json --ast --out-file src/compiled-lang/en.json",
+    "deploy": "tar -C build -zcf - . | ssh aircalc@orel.garga.net 'tar -C www -zxvf -'"
   },
   "browserslist": {
     "production": [
