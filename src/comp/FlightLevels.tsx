@@ -12,7 +12,10 @@ const Pmax = 1025;
 const FLmin = 50;
 const FLmax = 350;
 
-const elr = 0.0057;
+// The average environmental lapse rate
+// It is used for estimating the air temperature at
+// MSL from the mean temperature of the air column
+const elr = 0.0065;
 
 const Altitude = (props: {v: number}) => {
   return <div className='d-flex flex-column'>
