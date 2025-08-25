@@ -99,7 +99,7 @@ const FlightLevels = () => {
         </div>
         <div className='border m-1 p-1'>
           <div className='m-1 p-1'>Conditions</div>
-          <Slider title={intl.formatMessage({ defaultMessage: 'Pressure at the ground reduced to AMSL', id: 'pressure_ground' })}
+          <Slider title={intl.formatMessage({ defaultMessage: 'Pressure at the ground reduced to MSL', id: 'pressure_ground' })}
             units='hPa' value={P0}
             min={950} max={1050} scale={0} step={1}
             onChange={fromP0} />
@@ -110,7 +110,7 @@ const FlightLevels = () => {
               onChange={fromT} />
             <div className='container'>
               <div className='row'>
-                <div className='col-8'>{intl.formatMessage({ defaultMessage: 'Air temperature at MSL in calm air', id: 'temp_amsl' })}</div>
+                <div className='col-8'>{intl.formatMessage({ defaultMessage: 'Estimate of the approximate air temperature at MSL in calm air', id: 'temp_amsl' })}</div>
                 <div className='col-4'><strong className='text-nowrap'>{Math.round(T0)} °C</strong></div>
               </div>
             </div>
