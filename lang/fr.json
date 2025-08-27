@@ -37,7 +37,8 @@
     "icao_std": "En conditions OACI normalisées",
     "pressure_ground": "Pression au sol réduite au niveau de la mer",
     "pressure_level": "Pression au niveau donné",
-    "temp_air_column": "Température moyenne de la colonne d'air",
-    "temp_amsl": "Estimation de la température approximative de l'air calme au niveau de la mer",
+    "temp_air_msl": "Température de l'air au niveau de la mer",
+    "temp_column": "Température moyenne de la colonne d'air",
+    "temp_level": "Température de l'air au niveau donné",
     "altimeter_QNH": "Altitude virtuelle affichée sur l'altimètre en mode QNH"
 }
