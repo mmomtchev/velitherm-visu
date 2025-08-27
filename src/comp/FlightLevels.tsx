@@ -12,6 +12,18 @@ const Pmax = 1025;
 const FLmin = 50;
 const FLmax = 350;
 
+// Environmental lapse rate as a function of pressure
+// °C/hPa
+//
+// From ICAO standard atmosphere definition:
+// *  15°C   @ 1013.25 hPa (planetary surface)
+// * −56.5°C @  226.32 hPa (tropopause)
+const adiabaticLapseRatePressure = (-56.5 - 15) / (1013.25 - 226.32);
+
+function environmentalCoolingFromPressure(P: number, P0: number, T0: number): number {
+  return T0 - (P - P0) * adiabaticLapseRatePressure;
+}
+
 const Altitude = (props: {v: number}) => {
   return <div className='d-flex flex-column'>
     <strong className='text-nowrap'>{Math.round(props.v)} m</strong>
@@ -26,12 +38,12 @@ const FlightLevels = () => {
   const [P0, setP0] = React.useState(velitherm.P0);
   const [FL, setFL] = React.useState(115);
   const [P, setP] = React.useState(velitherm.pressureFromFL(FL));
-  const [T, setT] = React.useState(velitherm.adiabaticCooling(T0, P, P0));
+  const [T, setT] = React.useState(environmentalCoolingFromPressure(P, P0, T0));
   const [Tmean, setTmean] = React.useState((T0 + T) / 2);
   const [alt, setAlt] = React.useState(velitherm.altitudeFromPressure(P, P0, Tmean));
   const [altStd, setAltStd] = React.useState(velitherm.altitudeFromStandardPressure(P));
-  const [altMin, setAltMin] = React.useState(velitherm.altitudeFromPressure(P, Pmin, (Tmin + velitherm.adiabaticCooling(Tmin, P, P0)) / 2));
-  const [altMax, setAltMax] = React.useState(velitherm.altitudeFromPressure(P, Pmax, (Tmax + velitherm.adiabaticCooling(Tmax, P, P0)) / 2));
+  const [altMin, setAltMin] = React.useState(velitherm.altitudeFromPressure(P, Pmin, (Tmin + environmentalCoolingFromPressure(P, P0, Tmin)) / 2));
+  const [altMax, setAltMax] = React.useState(velitherm.altitudeFromPressure(P, Pmax, (Tmax + environmentalCoolingFromPressure(P, P0, Tmax)) / 2));
 
   const fromFL = (newFL: number) => {
     const newP = velitherm.pressureFromFL(newFL);
@@ -43,8 +55,8 @@ const FlightLevels = () => {
     setAlt(newAlt);
     setT(newT);
     setTmean(newTmean);
-    setAltMin(velitherm.altitudeFromPressure(newP, Pmin, (Tmin + velitherm.adiabaticCooling(Tmin, newP, P0)) / 2));
-    setAltMax(velitherm.altitudeFromPressure(newP, Pmax, (Tmax + velitherm.adiabaticCooling(Tmax, newP, P0)) / 2));
+    setAltMin(velitherm.altitudeFromPressure(newP, Pmin, (Tmin + environmentalCoolingFromPressure(newP, P0, Tmin)) / 2));
+    setAltMax(velitherm.altitudeFromPressure(newP, Pmax, (Tmax + environmentalCoolingFromPressure(newP, P0, Tmax)) / 2));
     setAltStd(velitherm.altitudeFromStandardPressure(newP));
   };
 
@@ -57,8 +69,8 @@ const FlightLevels = () => {
     setAlt(newAlt);
     setT(newT);
     setTmean(newTmean);
-    setAltMin(velitherm.altitudeFromPressure(newP, Pmin, (Tmin + velitherm.adiabaticCooling(Tmin, newP, P0)) / 2));
-    setAltMax(velitherm.altitudeFromPressure(newP, Pmax, (Tmax + velitherm.adiabaticCooling(Tmax, newP, P0)) / 2));
+    setAltMin(velitherm.altitudeFromPressure(newP, Pmin, (Tmin + environmentalCoolingFromPressure(newP, P0, Tmin)) / 2));
+    setAltMax(velitherm.altitudeFromPressure(newP, Pmax, (Tmax + environmentalCoolingFromPressure(newP, P0, Tmax)) / 2));
     setAltStd(velitherm.altitudeFromStandardPressure(newP));
   };
 
@@ -70,21 +82,21 @@ const FlightLevels = () => {
     setAlt(newAlt);
     setT(newT);
     setTmean(newTmean);
-    setAltMin(velitherm.altitudeFromPressure(P, Pmin, (Tmin + velitherm.adiabaticCooling(Tmin, P, newP0)) / 2));
-    setAltMax(velitherm.altitudeFromPressure(P, Pmax, (Tmax + velitherm.adiabaticCooling(Tmax, P, newP0)) / 2));
+    setAltMin(velitherm.altitudeFromPressure(P, Pmin, (Tmin + environmentalCoolingFromPressure(P, newP0, Tmin)) / 2));
+    setAltMax(velitherm.altitudeFromPressure(P, Pmax, (Tmax + environmentalCoolingFromPressure(P, newP0, Tmax)) / 2));
     setAltStd(velitherm.altitudeFromStandardPressure(P));
   };
 
   const fromT0 = (newT0: number) => {
-    const newT = velitherm.adiabaticCooling(newT0, P, P0);
+    const newT = environmentalCoolingFromPressure(P, P0, newT0);
     const newTmean = (newT0 + newT) / 2;
     const newAlt = velitherm.altitudeFromPressure(P, P0, newTmean);
     setT0(newT0);
     setTmean(newTmean);
     setT(newT);
     setAlt(newAlt);
-    setAltMin(velitherm.altitudeFromPressure(P, Pmin, (Tmin + velitherm.adiabaticCooling(Tmin, P, P0)) / 2));
-    setAltMax(velitherm.altitudeFromPressure(P, Pmax, Tmax));
+    setAltMin(velitherm.altitudeFromPressure(P, Pmin, (Tmin + environmentalCoolingFromPressure(P, P0, Tmin)) / 2));
+    setAltMax(velitherm.altitudeFromPressure(P, Pmax, (Tmax + environmentalCoolingFromPressure(P, P0, Tmax)) / 2));
     setAltStd(velitherm.altitudeFromStandardPressure(P));
   };
 
