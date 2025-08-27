@@ -8,8 +8,6 @@ import App from './App';
 import fr from './compiled-lang/fr.json';
 import en from './compiled-lang/en.json';
 
-const userLang = (navigator.language || 'en-US').split('-')[0];
-const siteLang = (['fr', 'en'].includes(userLang) ? userLang : 'en') as 'fr' | 'en';
 const messages = { fr, en };
 
 // eslint-disable-next-line react-refresh/only-export-components
