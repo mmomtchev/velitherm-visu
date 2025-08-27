@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes, Link } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -12,10 +12,9 @@ import FlightLevels from './comp/FlightLevels';
 function App() {
   const intl = useIntl();
 
-  return (
-    <BrowserRouter basename={import.meta.env.PUBLIC_URL}>
+  return <>
       <div className='velitherm-visu'>
-        <header className='header d-flex flex-row'>
+        <header className='header d-flex flex-row px-1'>
           <div className='label2'>
             <Routes>
               <Route key='Air Humidity' path={'/'} element={
@@ -64,8 +63,7 @@ function App() {
           <p>Build {import.meta.env.VITE_BUILD}</p>
         </small>
       </footer>
-    </BrowserRouter>
-  );
+  </>;
 }
 
 export default App;
