@@ -47,7 +47,7 @@ const FlightLevels = () => {
 
   const fromFL = (newFL: number) => {
     const newP = velitherm.pressureFromFL(newFL);
-    const newT = velitherm.adiabaticCooling(T0, newP, P0);
+    const newT = environmentalCoolingFromPressure(newP, P0, T0);
     const newTmean = (T0 + newT) / 2;
     const newAlt = velitherm.altitudeFromPressure(newP, P0, newTmean);
     setFL(newFL);
@@ -61,7 +61,7 @@ const FlightLevels = () => {
   };
 
   const fromPressure = (newP: number) => {
-    const newT = velitherm.adiabaticCooling(T0, newP, P0);
+    const newT = environmentalCoolingFromPressure(newP, P0, T0);
     const newTmean = (T0 + newT) / 2;
     const newAlt = velitherm.altitudeFromPressure(newP, P0, newTmean);
     setP(newP);
@@ -75,7 +75,7 @@ const FlightLevels = () => {
   };
 
   const fromP0 = (newP0: number) => {
-    const newT = velitherm.adiabaticCooling(T0, P, newP0);
+    const newT = environmentalCoolingFromPressure(P, newP0, T0);
     const newTmean = (T0 + newT) / 2;
     const newAlt = velitherm.altitudeFromPressure(P, newP0, newTmean);
     setP0(newP0);
