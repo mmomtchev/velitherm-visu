@@ -40,5 +40,14 @@
     "temp_air_msl": "Température de l'air au niveau de la mer",
     "temp_column": "Température moyenne de la colonne d'air",
     "temp_level": "Température de l'air au niveau donné",
-    "altimeter_QNH": "Altitude virtuelle affichée sur l'altimètre en mode QNH"
+    "altimeter_QNH": "Altitude virtuelle affichée sur l'altimètre en mode QNH",
+    "for_levels": "Pour altitudes",
+    "err_baro": "Equation barométrique compensée pour la pression du jour",
+    "err_best": "Equation hypsométrique avec température au niveau de la mer T=15°C",
+    "err_hypso": "Equation hypsométrique (cette méthode)",
+    "err_std": "Atmosphere normalisée OACI (equation fixe)",
+    "errors_label": "Erreur moyenne et maximale par rapport à des sondages réelles avec un ballon",
+    "brest": "Brest, Août 2025, atmosphère maritime et stable en conditions anticycloniques",
+    "trappes": "Trappes, Août 2025, atmosphère convective en plaine en conditions anticycloniques"
+
 }
