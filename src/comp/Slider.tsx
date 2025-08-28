@@ -38,6 +38,7 @@ const Slider = (props: SliderProps) => {
     if (props.displayMax !== undefined && valueText > props.displayMax)
         valueText = props.displayMax;
     const clamp = (v: number) => Math.max(Math.min(v, props.max), props.min);
+    const round = (v: number) => Math.round(v / props.step) * props.step;
 
     const slider = React.useRef<HTMLInputElement>(null);
     const marker = React.useRef<HTMLDivElement>(null);
@@ -53,7 +54,9 @@ const Slider = (props: SliderProps) => {
         <React.Fragment>
             <div className='d-flex flex-row m-2'>
                 <label className='label m-2' htmlFor={id}>{props.title}</label>
-                <RepeatableButton onClick={() => props.onChange(clamp(valueSlider - props.step))}>
+                <RepeatableButton
+                    onClick={() => props.onChange(round(clamp(valueSlider - props.step)))}
+                >
                     <Minus className='button-icon' />
                 </RepeatableButton>
                 <div className='marker-container'>
@@ -65,7 +68,9 @@ const Slider = (props: SliderProps) => {
                     min={props.min} max={props.max} step={props.step} onChange={(ev) => {
                         props.onChange(+ev.target.value);
                     }} />
-                <RepeatableButton onClick={() => props.onChange(clamp(valueSlider + props.step))}>
+                <RepeatableButton
+                    onClick={() => props.onChange(clamp(round(valueSlider + props.step)))}
+                >
                     <Plus className='button-icon' />
                 </RepeatableButton>
                 <p className='units m-2 text-nowrap'>
