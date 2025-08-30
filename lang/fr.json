@@ -49,5 +49,7 @@
     "errors_label": "Erreur moyenne et maximale par rapport à des sondages réelles avec un ballon",
     "brest": "Brest, Août 2025, atmosphère maritime et stable en conditions anticycloniques",
     "trappes": "Trappes, Août 2025, atmosphère convective en plaine en conditions anticycloniques",
-    "lapse_rate": "Gradient de température"
+    "lapse_rate": "Gradient de température",
+    "icao_def": "Définition de l'atmosphère OACI normalisée",
+    "msl": "Niveau de la mer"
 }

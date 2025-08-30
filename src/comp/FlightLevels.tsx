@@ -205,6 +205,29 @@ const FlightLevels = () => {
             <div className='row align-items-center'>
               <hr />
             </div>
+            <div className='row align-items-center'>
+              <div>{intl.formatMessage({ defaultMessage: 'ICAO standard atmosphere definition', id: 'icao_def' })}</div>
+              <table className='table m-2'>
+                <tbody>
+                  <tr>
+                    <td>{intl.formatMessage({ defaultMessage: 'MSL', id: 'msl' })}</td>
+                    <td>1013.25 hPa, 15°C, 0 m</td>
+                  </tr>
+                  <tr>
+                    <td>{intl.formatMessage({ defaultMessage: 'Tropopause', id: 'tropopause' })}</td>
+                    <td>226.32 hPa, -56.5°C, 11000 m</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {intl.formatMessage({ defaultMessage: 'Lapse rate', id: 'lapse_rate' })}
+                    </td>
+                    <td>
+                      0.65°C/100 m
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div >
