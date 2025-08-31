@@ -241,7 +241,8 @@ const FlightLevels = () => {
               <th className='col-2'>{intl.formatMessage({ defaultMessage: 'Static ICAO standard atmosphere equation', id: 'err_std' })}</th>
               <th className='col-2'>{intl.formatMessage({ defaultMessage: 'Barometric equation compensated for the MSL pressure of the day', id: 'err_baro' })}</th>
               <th className='col-2'>{intl.formatMessage({ defaultMessage: 'Hypsometric equation (this method) with fixed MSL temperature = 15°C', id: 'err_hypso' })}</th>
-              <th className='col-2'>{intl.formatMessage({ defaultMessage: 'Hypsometric equation (this method) with actual MSL temperatire', id: 'err_best' })}</th>
+              <th className='col-2'>{intl.formatMessage({ defaultMessage: 'Hypsometric equation (this method) with actual MSL temperature and lapse rate = 0.65°C/100m', id: 'err_hypso_temp' })}</th>
+              <th className='col-2'>{intl.formatMessage({ defaultMessage: 'Hypsometric equation (this method) with actual MSL temperature and lapse rate', id: 'err_hypso_best' })}</th>
             </tr>
           </thead>
           <tbody>
@@ -250,42 +251,49 @@ const FlightLevels = () => {
               <td> 5 m / 18 m </td>
               <td> 4 m / 16 m </td>
               <td> 1 m / 3 m </td>
+              <td> 1 m / 2 m </td>
             </tr>
             <tr><td> &lt; 1000 m </td>
               <td> 94 m / 175 m </td>
               <td> 13 m / 43 m </td>
               <td> 9 m / 33 m </td>
               <td> 3 m / 10 m </td>
+              <td> 2 m / 4 m </td>
             </tr>
             <tr><td> &lt; 1500 m </td>
               <td> 114 m / 198 m </td>
               <td> 26 m / 70 m </td>
               <td> 15 m / 48 m </td>
               <td> 10 m / 44 m </td>
+              <td> 7 m / 30 m </td>
             </tr>
             <tr><td> &lt; 2000 m </td>
               <td> 128 m / 221 m </td>
               <td> 37 m / 97 m </td>
               <td> 18 m / 57 m </td>
               <td> 14 m / 45 m </td>
+              <td> 9 m / 30 m </td>
             </tr>
             <tr><td> &lt; 2500 m </td>
               <td> 143 m / 246 m </td>
               <td> 49 m / 124 m </td>
               <td> 22 m / 62 m </td>
               <td> 20 m / 45 m </td>
+              <td> 11 m / 30 m </td>
             </tr>
             <tr><td> &lt; 3000 m </td>
               <td> 159 m / 270 m </td>
               <td> 62 m / 153 m </td>
               <td> 26 m / 62 m </td>
               <td> 27 m / 53 m </td>
+              <td> 12 m / 31 m </td>
             </tr>
             <tr><td> &lt; 4000 m </td>
               <td> 203 m / 314 m </td>
               <td> 88 m / 204 m </td>
               <td> 55 m / 91 m </td>
               <td> 43 m / 76 m </td>
+              <td> 25 m / 55 m </td>
             </tr>
           </tbody>
         </table>
@@ -297,7 +305,8 @@ const FlightLevels = () => {
               <th className='col-2'>{intl.formatMessage({ defaultMessage: 'Static ICAO standard atmosphere equation', id: 'err_std' })}</th>
               <th className='col-2'>{intl.formatMessage({ defaultMessage: 'Barometric equation compensated for the MSL pressure of the day', id: 'err_baro' })}</th>
               <th className='col-2'>{intl.formatMessage({ defaultMessage: 'Hypsometric equation (this method) with fixed MSL temperature = 15°C', id: 'err_hypso' })}</th>
-              <th className='col-2'>{intl.formatMessage({ defaultMessage: 'Hypsometric equation (this method) with actual MSL temperatire', id: 'err_best' })}</th>
+              <th className='col-2'>{intl.formatMessage({ defaultMessage: 'Hypsometric equation (this method) with actual MSL temperature and lapse rate = 0.65°C/100m', id: 'err_hypso_temp' })}</th>
+              <th className='col-2'>{intl.formatMessage({ defaultMessage: 'Hypsometric equation (this method) with actual MSL temperature and lapse rate', id: 'err_hypso_best' })}</th>
             </tr>
           </thead>
           <tbody>
@@ -306,42 +315,49 @@ const FlightLevels = () => {
               <td> 4 m / 19 m </td>
               <td> 4 m / 17 m </td>
               <td> 0 m / 2 m </td>
+              <td> 0 m / 2 m </td>
             </tr>
             <tr><td> &lt; 1000 m </td>
               <td> 137 m / 440 m </td>
               <td> 11 m / 45 m </td>
               <td> 8 m / 37 m </td>
               <td> 1 m / 6 m </td>
+              <td> 1 m / 3 m </td>
             </tr>
             <tr><td> &lt; 1500 m </td>
               <td> 147 m / 442 m </td>
               <td> 19 m / 72 m </td>
               <td> 11 m / 53 m </td>
               <td> 3 m / 10 m </td>
+              <td> 3 m / 13 m </td>
             </tr>
             <tr><td> &lt; 2000 m </td>
               <td> 159 m / 444 m </td>
               <td> 29 m / 98 m </td>
               <td> 15 m / 62 m </td>
               <td> 4 m / 12 m </td>
+              <td> 4 m / 13 m </td>
             </tr>
             <tr><td> &lt; 2500 m </td>
               <td> 173 m / 446 m </td>
               <td> 39 m / 125 m </td>
               <td> 17 m / 66 m </td>
               <td> 6 m / 16 m </td>
+              <td> 5 m / 11 m </td>
             </tr>
             <tr><td> &lt; 3000 m </td>
               <td> 188 m / 448 m </td>
               <td> 51 m / 150 m </td>
               <td> 20 m / 66 m </td>
               <td> 9 m / 23 m </td>
+              <td> 7 m / 14 m </td>
             </tr>
             <tr><td> &lt; 4000 m </td>
               <td> 221 m / 450 m </td>
               <td> 76 m / 194 m </td>
               <td> 40 m / 98 m </td>
               <td> 18 m / 44 m </td>
+              <td> 9 m / 18 m </td>
             </tr>
           </tbody>
         </table>
