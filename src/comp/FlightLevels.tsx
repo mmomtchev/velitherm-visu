@@ -246,54 +246,85 @@ const FlightLevels = () => {
             </tr>
           </thead>
           <tbody>
-            <tr><td> &lt; 500 m </td>
+            <tr>
+              <td> &lt; 500 m </td>
               <td> 85 m / 169 m </td>
               <td> 5 m / 18 m </td>
               <td> 4 m / 16 m </td>
               <td> 1 m / 3 m </td>
               <td> 1 m / 2 m </td>
             </tr>
-            <tr><td> &lt; 1000 m </td>
+            <tr>
+              <td> &lt; 1000 m </td>
               <td> 94 m / 175 m </td>
               <td> 13 m / 43 m </td>
               <td> 9 m / 33 m </td>
               <td> 3 m / 10 m </td>
               <td> 2 m / 4 m </td>
             </tr>
-            <tr><td> &lt; 1500 m </td>
+            <tr>
+              <td> &lt; 1500 m </td>
               <td> 114 m / 198 m </td>
               <td> 26 m / 70 m </td>
               <td> 15 m / 48 m </td>
               <td> 10 m / 44 m </td>
               <td> 7 m / 30 m </td>
             </tr>
-            <tr><td> &lt; 2000 m </td>
+            <tr>
+              <td> &lt; 2000 m </td>
               <td> 128 m / 221 m </td>
               <td> 37 m / 97 m </td>
               <td> 18 m / 57 m </td>
               <td> 14 m / 45 m </td>
               <td> 9 m / 30 m </td>
             </tr>
-            <tr><td> &lt; 2500 m </td>
+            <tr>
+              <td> &lt; 2500 m </td>
               <td> 143 m / 246 m </td>
               <td> 49 m / 124 m </td>
               <td> 22 m / 62 m </td>
               <td> 20 m / 45 m </td>
               <td> 11 m / 30 m </td>
             </tr>
-            <tr><td> &lt; 3000 m </td>
+            <tr>
+              <td> &lt; 3000 m </td>
               <td> 159 m / 270 m </td>
               <td> 62 m / 153 m </td>
               <td> 26 m / 62 m </td>
               <td> 27 m / 53 m </td>
               <td> 12 m / 31 m </td>
             </tr>
-            <tr><td> &lt; 4000 m </td>
+            <tr>
+              <td> &lt; 4000 m </td>
               <td> 203 m / 314 m </td>
               <td> 88 m / 204 m </td>
               <td> 55 m / 91 m </td>
               <td> 43 m / 76 m </td>
               <td> 25 m / 55 m </td>
+            </tr>
+            <tr>
+              <td> &lt; 6000 m </td>
+              <td> 271 m / 394 m </td>
+              <td> 144 m / 289 m </td>
+              <td> 191 m / 294 m </td>
+              <td> 61 m / 122 m </td>
+              <td> 40 m / 65 m </td>
+            </tr>
+            <tr>
+              <td> &lt; 8000 m </td>
+              <td> 342 m / 467 m </td>
+              <td> 206 m / 364 m </td>
+              <td> 467 m / 614 m </td>
+              <td> 77 m / 161 m </td>
+              <td> 50 m / 101 m </td>
+            </tr>
+            <tr>
+              <td> &lt; 10000 m </td>
+              <td> 393 m / 526 m </td>
+              <td> 258 m / 489 m </td>
+              <td> 898 m / 1082 m </td>
+              <td> 83 m / 178 m </td>
+              <td> 73 m / 136 m </td>
             </tr>
           </tbody>
         </table>
@@ -310,54 +341,85 @@ const FlightLevels = () => {
             </tr>
           </thead>
           <tbody>
-            <tr><td> &lt; 500 m </td>
+            <tr>
+              <td> &lt; 500 m </td>
               <td> 130 m / 437 m </td>
               <td> 4 m / 19 m </td>
               <td> 4 m / 17 m </td>
               <td> 0 m / 2 m </td>
-              <td> 0 m / 2 m </td>
+              <td> 1 m / 3 m </td>
             </tr>
-            <tr><td> &lt; 1000 m </td>
+            <tr>
+              <td> &lt; 1000 m </td>
               <td> 137 m / 440 m </td>
               <td> 11 m / 45 m </td>
               <td> 8 m / 37 m </td>
               <td> 1 m / 6 m </td>
               <td> 1 m / 3 m </td>
             </tr>
-            <tr><td> &lt; 1500 m </td>
+            <tr>
+              <td> &lt; 1500 m </td>
               <td> 147 m / 442 m </td>
               <td> 19 m / 72 m </td>
               <td> 11 m / 53 m </td>
               <td> 3 m / 10 m </td>
               <td> 3 m / 13 m </td>
             </tr>
-            <tr><td> &lt; 2000 m </td>
+            <tr>
+              <td> &lt; 2000 m </td>
               <td> 159 m / 444 m </td>
               <td> 29 m / 98 m </td>
               <td> 15 m / 62 m </td>
               <td> 4 m / 12 m </td>
-              <td> 4 m / 13 m </td>
+              <td> 4 m / 15 m </td>
             </tr>
-            <tr><td> &lt; 2500 m </td>
+            <tr>
+              <td> &lt; 2500 m </td>
               <td> 173 m / 446 m </td>
               <td> 39 m / 125 m </td>
               <td> 17 m / 66 m </td>
               <td> 6 m / 16 m </td>
               <td> 5 m / 11 m </td>
             </tr>
-            <tr><td> &lt; 3000 m </td>
+            <tr>
+              <td> &lt; 3000 m </td>
               <td> 188 m / 448 m </td>
               <td> 51 m / 150 m </td>
               <td> 20 m / 66 m </td>
               <td> 9 m / 23 m </td>
               <td> 7 m / 14 m </td>
             </tr>
-            <tr><td> &lt; 4000 m </td>
+            <tr>
+              <td> &lt; 4000 m </td>
               <td> 221 m / 450 m </td>
               <td> 76 m / 194 m </td>
               <td> 40 m / 98 m </td>
               <td> 18 m / 44 m </td>
               <td> 9 m / 18 m </td>
+            </tr>
+            <tr>
+              <td> &lt; 6000 m </td>
+              <td> 296 m / 452 m </td>
+              <td> 132 m / 264 m </td>
+              <td> 175 m / 276 m </td>
+              <td> 38 m / 82 m </td>
+              <td> 17 m / 35 m </td>
+            </tr>
+            <tr>
+              <td> &lt; 8000 m </td>
+              <td> 365 m / 514 m </td>
+              <td> 186 m / 332 m </td>
+              <td> 429 m / 564 m </td>
+              <td> 55 m / 136 m </td>
+              <td> 33 m / 64 m </td>
+            </tr>
+            <tr>
+              <td> &lt; 10000 m </td>
+              <td> 416 m / 583 m </td>
+              <td> 237 m / 387 m </td>
+              <td> 819 m / 1009 m </td>
+              <td> 81 m / 231 m </td>
+              <td> 51 m / 116 m </td>
             </tr>
           </tbody>
         </table>
