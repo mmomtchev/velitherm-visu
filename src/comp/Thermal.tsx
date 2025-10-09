@@ -293,8 +293,9 @@ const Thermal = () => {
                                         <input type='number' className='input-number' id={`humid-${lvl.altitude}`}
                                             min={0} max={100} maxLength={3} step={1} value={lvl.rh.toFixed(0)}
                                             onChange={(ev) => {
-                                                lvl.rh = +ev.target.value;
-                                                setLevels([...levels]);
+                                                const newLevels = [...levels];
+                                                newLevels[i].rh = +ev.target.value;
+                                                setLevels(newLevels);
                                             }} />
                                         <label htmlFor={`humid-${lvl.altitude}`}>%</label>
                                     </div>
