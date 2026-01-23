@@ -8,7 +8,7 @@
     "react-dom": "^19.1.1",
     "react-intl": "^8.0.11",
     "react-repeatable": "^2.0.1",
-    "react-router-dom": "^7.11.0",
+    "react-router-dom": "^7.12.0",
     "velitherm": "^2.0.1",
     "vite-plugin-svgr": "^4.5.0"
   },
