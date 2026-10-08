@@ -118,6 +118,7 @@ function drawInfo(ctx: CanvasRenderingContext2D, lvls: Level[], x: number, width
 
         ctx.fillStyle = 'black';
         centerText(ctx, `${altitude}m`, x, line);
+        // eslint-disable-next-line no-useless-assignment
         line += 20;
     }
 }
